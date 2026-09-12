@@ -1,0 +1,50 @@
+{
+  "status": "PASS",
+  "slicer": "orca",
+  "settings": {
+    "name": "Linked asymmetric part",
+    "extruder": "1",
+    "layer_height": "0.16",
+    "sparse_infill_density": "22%",
+    "wall_loops": "4"
+  },
+  "plate_membership": [
+    [
+      "1",
+      "2",
+      "0"
+    ]
+  ],
+  "instance_transform": [
+    0.79863551,
+    0.601815023,
+    0.0,
+    -0.601815023,
+    0.79863551,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    108.0,
+    97.0,
+    7.5
+  ],
+  "unchanged_reference_vertices": 144,
+  "max_reference_drift_mm": 0.0,
+  "geometry_matches_export": true,
+  "previous_geometry_retained": true,
+  "revert_verified": true,
+  "legacy_snapshot_missing": true,
+  "toolpaths_in_saved_projects": false,
+  "scope": "Saved native GUI results. Test placement/settings were seeded in an isolated 3MF; plate moves were not repeated here.",
+  "final_build_manual_update_verified": true,
+  "launcher_start_and_reuse_verified": true,
+  "offline_revert_verified": true,
+  "offline_update_error_observed": true,
+  "delayed_response_cancel_observed": true,
+  "duplicate_request_suppressed": true,
+  "final_geometry_matches_verified_update": true,
+  "native_slicing_guard_error_observed": false,
+  "slicing_or_printing_command_issued": false,
+  "build_dll_sha256": "f2f751523f9a8d58d2dbc0db747bdc13e1fe887558aa256e1ab91355ccbbca8a"
+}

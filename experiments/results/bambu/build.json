@@ -1,0 +1,12 @@
+{
+  "source": {
+    "repository": "https://github.com/bambulab/BambuStudio.git",
+    "commit": "926a7192574bcb9b3a732e1ec59a46d79cb45466",
+    "tag": "v02.08.02.61"
+  },
+  "application_dll_sha256": "14115763e73958518183997531e6b47976a19343c2b5d1cbb9568b170f5e5b41",
+  "tested_date": "2026-09-10",
+  "platform": "Windows x64",
+  "profile": "isolated A1 mini 0.4 / Generic PLA",
+  "scope": "custom native build; stock plugin compatibility is not claimed"
+}

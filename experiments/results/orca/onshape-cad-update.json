@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "slicer": "orca",
+  "settings": {
+    "name": "Linked asymmetric part",
+    "extruder": "1",
+    "layer_height": "0.16",
+    "wall_loops": "4",
+    "sparse_infill_density": "22%"
+  },
+  "plate_membership": [
+    [
+      "1",
+      "2",
+      "0"
+    ]
+  ],
+  "instance_transform": [
+    0.7986355100472928,
+    0.6018150231520483,
+    0.0,
+    -0.6018150231520483,
+    0.7986355100472928,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    108.0,
+    97.0,
+    7.5
+  ],
+  "unchanged_reference_vertices": 144,
+  "max_reference_drift_mm": 7.961726447768295e-10,
+  "geometry_matches_export": true,
+  "previous_geometry_retained": true,
+  "revert_verified": true,
+  "toolpaths_in_saved_projects": false,
+  "scope": "Saved native GUI results. Test placement/settings were seeded in an isolated 3MF; plate moves were not repeated here.",
+  "date": "2026-09-10",
+  "cad_dimensions_before_mm": [
+    50,
+    25,
+    15
+  ],
+  "cad_dimensions_after_mm": [
+    60,
+    25,
+    15
+  ],
+  "updated_project_reopened_before_revert": true,
+  "automatic_updates_paused_after_revert": true,
+  "native_slicing_guard_error_observed": false,
+  "slicing_or_printing_command_issued": false
+}

@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "slicer": "bambu",
+  "objects": [
+    {
+      "name": "Linked asymmetric part",
+      "plates": [
+        "1"
+      ],
+      "settings": {
+        "name": "Linked asymmetric part",
+        "extruder": "1",
+        "layer_height": "0.16",
+        "sparse_infill_density": "22%",
+        "wall_loops": "4"
+      },
+      "max_reference_drift_mm": 0.0
+    },
+    {
+      "name": "Linked copy",
+      "plates": [
+        "2"
+      ],
+      "settings": {
+        "name": "Linked copy",
+        "extruder": "1",
+        "layer_height": "0.16",
+        "sparse_infill_density": "22%",
+        "wall_loops": "6"
+      },
+      "max_reference_drift_mm": 0.0
+    }
+  ],
+  "geometry_matches_live_export": true,
+  "from_revision": "997441c4a1b9159531e64e85",
+  "to_revision": "2f16c3907de8719c4cecd386",
+  "previous_geometry_retained": true,
+  "toolpaths_in_saved_project": false,
+  "dll_sha256": "a9364da35de2b7f6467cd4582aeae09daf5bb58b9e64ac6ddee516443248e615",
+  "scope": "Saved native GUI result after one physical click on Update linked parts. Two seeded objects share a source across two plates; normal user plate dragging was not repeated."
+}

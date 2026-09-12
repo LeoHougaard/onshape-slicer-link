@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Onshape Slicer Link</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+<main>
+  <header><span class="mark" aria-hidden="true">↗</span><div><h1>Slicer Link</h1><p>Onshape → your slicer</p></div></header>
+  <div id="notice" role="status" aria-live="polite" hidden></div>
+  <section id="welcome">
+    <h2>Keep your parts connected.</h2>
+    <p>Send models to your computer, then use <strong>Reload from disk</strong> in OrcaSlicer or Bambu Studio.</p>
+    <button id="connect" class="primary">Connect to Onshape</button>
+    <p class="quiet">Your slicer stays yours. Arrange, slice, and print as usual.</p>
+  </section>
+  <div id="connected" hidden>
+    <section id="pairing" hidden>
+      <h2>Connect this computer</h2>
+      <p>Pair the helper you just opened. Only pair a computer you control.</p>
+      <button id="claim" class="primary">Pair this computer</button>
+    </section>
+    <section id="workspace">
+      <div class="section-title"><h2>Linked parts</h2><button id="choose" class="text">Choose parts</button></div>
+      <p id="context-help" class="quiet" hidden>Open Slicer Link from a Part Studio in Onshape to add parts.</p>
+      <div id="catalog" hidden><label for="parts">Solid parts in this Part Studio</label><select id="parts"></select><button id="add">Link part</button></div>
+      <p id="empty" class="empty">No linked parts yet.<br>Choose a part from this Part Studio to get started.</p>
+      <ul id="links" aria-label="Linked parts"></ul>
+      <label for="devices">Send to</label>
+      <select id="devices"><option value="">Pair a computer first</option></select>
+      <p id="setup-help" class="quiet">Open the installed Slicer Link helper to pair this computer.</p>
+      <button id="refresh" class="primary wide" disabled>Refresh selected parts</button>
+      <div id="transfer" hidden>
+        <p id="job-status" role="status" aria-live="polite"></p>
+        <a id="handoff" class="button" href="#">Open helper</a>
+        <button id="check-job" class="text" hidden>Check transfer</button>
+      </div>
+    </section>
+    <section class="instructions">
+      <h2>In your slicer</h2>
+      <ol><li>Import each linked STL once.</li><li>Save your project beside the STL files.</li><li>After a refresh, select the objects and use <strong>Reload from disk</strong>.</li></ol>
+      <p class="quiet">Review placement and any painted supports after reloading. The slicer controls how new geometry is placed.</p>
+    </section>
+    <details><summary>Connection &amp; API use</summary><p id="usage" class="quiet"></p><p class="quiet">Refresh runs only when you ask. These counts cover this application, not your entire Onshape allowance.</p><ul id="computers"></ul><button id="disconnect" class="text">Sign out</button></details>
+  </div>
+  <footer>Works with the official, unmodified slicers.</footer>
+</main>
+</body>
+</html>

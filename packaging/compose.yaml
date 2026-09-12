@@ -1,0 +1,18 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: packaging/Dockerfile
+    env_file: ../.env.server
+    restart: unless-stopped
+    volumes:
+      - app-data:/data
+    ports:
+      - "127.0.0.1:8767:8767"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+volumes:
+  app-data:

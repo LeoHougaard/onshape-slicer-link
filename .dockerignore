@@ -1,0 +1,9 @@
+*
+!pyproject.toml
+!LICENSE
+!packaging
+!packaging/requirements-server.txt
+!slicer_link
+!slicer_link/**
+slicer_link/**/__pycache__
+slicer_link/**/*.pyc

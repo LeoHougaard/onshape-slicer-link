@@ -1,0 +1,12 @@
+{
+  "active_plate_add": true,
+  "failure_preserves_project": true,
+  "plate_move": true,
+  "reference_vertex_drift_mm": 0.0,
+  "reopen_in_new_process": "pending",
+  "revert_after_move": true,
+  "slice_start_attempts": 0,
+  "slicing_running": false,
+  "status": "passed",
+  "update": true
+}

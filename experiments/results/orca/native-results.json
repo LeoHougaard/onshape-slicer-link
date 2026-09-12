@@ -1,0 +1,16 @@
+{
+  "checks": [
+    "validated replacement",
+    "rotated source anchor",
+    "independent copy",
+    "object settings",
+    "wrong identity rejected",
+    "invalid geometry rejected",
+    "3MF round trip",
+    "revert after later transforms and reopen",
+    "automatic updates paused"
+  ],
+  "reference_vertex_drift_mm": 0.0,
+  "scope": "native model and 3MF I/O; GUI acceptance still required",
+  "status": "passed"
+}

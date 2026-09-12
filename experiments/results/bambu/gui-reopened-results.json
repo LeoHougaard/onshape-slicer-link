@@ -1,0 +1,8 @@
+{
+  "fresh_process_update_and_revert": true,
+  "plate": 1,
+  "previously_sliced_toolpaths_invalidated": true,
+  "slice_start_attempts": 0,
+  "status": "passed",
+  "wall_loops": 7
+}

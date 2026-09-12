@@ -1,0 +1,15 @@
+/external/
+/build/
+/artifacts/
+__pycache__/
+*.pyc
+.venv/
+/00000.log
+/result.json
+/.env
+/.env.server
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+data/

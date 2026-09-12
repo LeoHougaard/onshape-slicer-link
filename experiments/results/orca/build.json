@@ -1,0 +1,11 @@
+{
+  "source": {
+    "repository": "https://github.com/OrcaSlicer/OrcaSlicer.git",
+    "commit": "a49b8927088cde075c8ccfc7dcaf1bedc3b52af9"
+  },
+  "application_dll_sha256": "76d70dfcebcec4f2f8bf75e74efe950875849d19661e4b2c399db0afb761e97b",
+  "tested_date": "2026-09-10",
+  "platform": "Windows x64",
+  "profile": "isolated A1 mini 0.4 / Generic PLA",
+  "scope": "custom native build; stock plugin compatibility is not claimed"
+}

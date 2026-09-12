@@ -1,0 +1,21 @@
+{
+  "orca": {
+    "repository": "https://github.com/OrcaSlicer/OrcaSlicer.git",
+    "commit": "a49b8927088cde075c8ccfc7dcaf1bedc3b52af9"
+  },
+  "bambu": {
+    "repository": "https://github.com/bambulab/BambuStudio.git",
+    "commit": "926a7192574bcb9b3a732e1ec59a46d79cb45466",
+    "tag": "v02.08.02.61"
+  },
+  "assimp": {
+    "repository": "https://github.com/assimp/assimp.git",
+    "commit": "c35200e38ea8f058812b83de2ef32c6093b0ece2",
+    "tag": "v5.4.3"
+  },
+  "boost-stacktrace": {
+    "repository": "https://github.com/boostorg/stacktrace.git",
+    "tag": "boost-1.84.0",
+    "commit": "4f2da0e653f93a2f6398b7f816f667bbe9699db9"
+  }
+}
