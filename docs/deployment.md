@@ -14,8 +14,8 @@ new Onshape extension has been registered by this implementation.
 The application operator does this once. People installing the desktop helper
 only connect their account and choose a folder.
 
-1. Put the reviewed source in a private GitHub repository. Keep `.env`,
-   `.env.server`, all `artifacts/`, and `data/` out of the repository.
+1. Use the private [source repository](https://github.com/LeoHougaard/onshape-slicer-link).
+   `.env`, `.env.server`, `artifacts/`, and `data/` are excluded from it.
 2. In the Render dashboard, create a Blueprint from that repository and review
    the paid Starter service and persistent disk before creating them. Provide
    `OSL_ENCRYPTION_KEY` through Render's secret environment field. The local setup
@@ -28,12 +28,19 @@ only connect their account and choose a folder.
    test account. Use the callback and extension fields below. Add the HTTPS
    callback alongside any existing development callback that is still needed.
    Add its client ID and secret to the Render service's environment and redeploy.
-5. Build the helper with `python -m scripts.build_helper --origin https://YOUR-HOST`.
-   This embeds the public address in setup. The installer never contains an
-   Onshape client secret. Install it, pair the computer, and start the user test.
+5. Install `dist/OnshapeSlicerLink-Setup-x86_64.exe`, enter the public HTTPS address,
+   pair the computer, and start the user test. This development installer is
+   already built. For later distribution, build the helper with
+   `uv run python scripts/build_helper.py --origin https://YOUR-HOST` to include
+   the public address. The installer never contains an Onshape client secret.
 
 The existing local prototype grant belongs to the replacement test account.
 Continue using that account for testing. Do not use the original account.
+
+Start **Set up hosted app.cmd** on Windows, or run
+`bash scripts/setup_hosted_app.sh` in Git Bash. It opens the account pages and
+walks through the four stages. The wizard has been syntax checked; account
+registration and billing choices are deliberately left for the account owner.
 
 ## Onshape registration fields
 

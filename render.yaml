@@ -5,7 +5,7 @@ services:
     runtime: python
     plan: starter
     numInstances: 1
-    autoDeployTrigger: off
+    autoDeployTrigger: 'off'
     buildCommand: pip install --require-hashes -r packaging/requirements-server.txt && pip install --no-deps .
     startCommand: python -m uvicorn slicer_link.asgi:app --host 0.0.0.0 --port $PORT --no-access-log --no-proxy-headers
     healthCheckPath: /health
@@ -14,8 +14,6 @@ services:
       mountPath: /var/data
       sizeGB: 1
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.12.11
       - key: OSL_DATA_DIR
         value: /var/data
       - key: OSL_ENCRYPTION_KEY

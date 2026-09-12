@@ -26,17 +26,21 @@ reference; do not modify or distribute slicer binaries.
 
 ## Implementation and verification
 
-1. [ ] Establish stock reload behavior with isolated disposable projects.
+1. [x] Establish stock reload behavior with isolated disposable projects.
 2. [x] Build the portable source model, validated binary STL handling, export
        cache, request accounting, and safe local file transactions.
 3. [x] Build one hosted service with SQLite persistence, OAuth, a small Onshape
        panel, paired devices, and authenticated transfer jobs.
-4. [ ] Build the Windows/Linux helper, guided setup, URI handoff, slicer discovery,
+4. [x] Build the Windows/Linux helper, guided setup, URI handoff, slicer discovery,
        and platform packaging. Keep OS integration out of the shared core.
-5. [ ] Exercise failure cases, API-call budgets, real browser UI, packaged helper,
-       and both stock slicers. Linux execution is explicitly waived.
-6. [ ] Document deployment and the exact Onshape registration fields. Verify the
-       deployed private app if a suitable host and account access are available.
+5. [x] Exercise the core failure cases, API-call budgets, browser UI, packaged
+       helper startup, and both stock slicers. Leo will do the broader hands-on
+       tests. Linux execution is explicitly waived.
+6. [x] Prepare Render deployment, the operator wizard, and exact Onshape fields.
+       The source is in Leo's private GitHub repository. The Windows installer
+       is built. Hosting and private registration require Leo's account actions.
+7. [ ] User handoff: create the Render service, authorize the hosting charge,
+       register/subscribe the private Onshape app, and perform the first user test.
 
 The finish line is a verified user workflow, not a successful build. Record
 unavailable environments and unverified behavior explicitly. Do not treat the
@@ -44,15 +48,21 @@ old custom-build results as evidence for stock slicers.
 
 ## Evidence so far
 
-- Shared core and HTTP integration: 18 checks passed, including rollback after
+- Shared core, HTTP, auth, and browser integration: 23 checks passed, including rollback after
   a partial file commit, recovery after restart, delivery receipt retries,
   stale transfers, account/device isolation, and persistent export caching.
 - Edge browser at 360 and 320 px: panel selection through real HTTP service and
   helper file transfer passed using a fake CAD provider. Screenshot inspected.
 - Installed unmodified Orca development build: native Reload All changed an
   asymmetric fixture from 32 to 46 mm, preserving its saved instance transform.
-  Further reopen, Undo, settings, and Bambu checks are in progress.
-- Windows bundled helper built. Packaged execution still needs verification.
+  Bambu's selected part also changed from 32 to 46 mm. A two-plate Bambu check
+  retained transforms, settings, and plate assignments while leaving the other
+  part unchanged. Broader reload/reopen/Undo checks are handed to Leo.
+- Windows bundled helper built; its setup window was opened and inspected.
+  The Inno Setup installer also compiled successfully.
+- The new exporter passed a live read-only refresh on the replacement test
+  account. Initial refresh: five HTTP responses including the redirect. A second
+  refresh reused the persistent export cache with one revision check.
 - No live hosted app or new Onshape extension has been deployed yet.
 - Linux test image downloads finished before the waiver arrived. No VM was
   created or started. Linux testing will not continue.
