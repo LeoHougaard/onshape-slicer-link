@@ -1,5 +1,19 @@
 # Onshape Slicer Link
 
+## Quick local test
+
+Paid hosting has been rejected. Run **Start local test.cmd** in this checkout.
+It opens a local browser page using the already authorized replacement test
+account. Choose parts, link one, refresh, then select **Save STL files locally**.
+Files go to `artifacts/local-test/project/`. Import the STL into your normal
+slicer once; use Reload from disk after later refreshes.
+
+This quick launcher uses the existing Windows development environment and grant.
+It does not require Render, a domain, a tunnel, or a new Onshape registration.
+For this test the panel opens in a separate browser window. Embedding the local
+app inside Onshape and packaging local setup for Linux remain follow-up work.
+The older hosted instructions below are superseded and must not be followed.
+
 An Onshape panel and a small desktop helper for the **official, unmodified
 OrcaSlicer and Bambu Studio**. Normal slicer updates remain independent.
 

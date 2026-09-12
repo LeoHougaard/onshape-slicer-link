@@ -184,6 +184,9 @@ finish() {
 # Replace the example below. Set TOTAL_STAGES to match the stages you write.
 # ──────────────────────────────────────────────────────────────────────────
 
+printf '%s\n' 'Hosted setup has been withdrawn. Run Start local test.cmd instead.'
+exit 0
+
 TOTAL_STAGES=4
 script_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 cd -- "$script_root"

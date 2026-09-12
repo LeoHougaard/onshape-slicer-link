@@ -1,5 +1,8 @@
 # Host the Onshape application
 
+**Withdrawn. No paid hosting is allowed.** Use `Start local test.cmd` for the
+current local test. The notes below are historical; do not create a Render service.
+
 Render is the proposed managed host for the first deployment. The draft
 [`render.yaml`](../render.yaml) creates one Starter web service and a 1 GB persistent
 disk. Current base cost is about US$7.25/month before taxes or extra usage.

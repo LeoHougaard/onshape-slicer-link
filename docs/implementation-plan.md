@@ -1,5 +1,18 @@
 # Stock slicer implementation
 
+Latest direction: no paid hosting is allowed. Leo requested a quick local test.
+The immediate gate is a running loopback app using the existing replacement
+test-account grant and a verified local STL save. The Onshape iframe and a
+packaged cross-platform local installation are deferred for this quick test.
+Render setup is withdrawn; no service or hosting charge was created.
+
+Local test evidence: the app is bound to `127.0.0.1:8767`. A real Edge browser
+used the replacement account, selected a solid part, refreshed it, and saved
+one 15,284-byte STL to `artifacts/local-test/project/`. No browser errors occurred.
+The page was visually inspected. Unauthenticated saves/stops and unexpected
+Host headers are rejected. The page includes a button to stop the local server.
+This is a Windows development launcher, not the final cross-platform installer.
+
 Current direction, September 11, 2026. This supersedes the custom-build delivery
 proposal in the historical experiment documents. Preserve the experiments as
 reference; do not modify or distribute slicer binaries.
