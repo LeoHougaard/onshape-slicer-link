@@ -1,5 +1,10 @@
 # Local application plan
 
+The full user acceptance list is now the completion condition. The checklist
+below records the narrower 0.2.0 baseline only. See the
+[acceptance audit](acceptance-audit.md) for gaps, evidence and the unresolved
+slicer integration decision. Passing the bridge tests does not close that gate.
+
 Current direction, September 12, 2026. No paid hosting is allowed. The user wants
 easy connection to a specific Onshape document and an independently updatable,
 unmodified slicer. The quick save-file test is superseded by the local app.
