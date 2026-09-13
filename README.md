@@ -1,74 +1,50 @@
 # Onshape Slicer Link
 
-## Quick local test
+A local application that sends Onshape parts to your installed, unmodified
+OrcaSlicer or Bambu Studio. No hosted server, subscription, tunnel, or domain.
 
-Paid hosting has been rejected. Run **Start local test.cmd** in this checkout.
-It opens a local browser page using the already authorized replacement test
-account. Choose parts, link one, refresh, then select **Save STL files locally**.
-Files go to `artifacts/local-test/project/`. Import the STL into your normal
-slicer once; use Reload from disk after later refreshes.
+## Use it
 
-This quick launcher uses the existing Windows development environment and grant.
-It does not require Render, a domain, a tunnel, or a new Onshape registration.
-For this test the panel opens in a separate browser window. Embedding the local
-app inside Onshape and packaging local setup for Linux remain follow-up work.
-The older hosted instructions below are superseded and must not be followed.
+1. Open **Start Slicer Link.cmd**, or install and open the Windows application.
+2. Choose OrcaSlicer or Bambu Studio from the detected installations. For a
+   portable installation, use **Browse** under the slicer chooser.
+3. Paste your Onshape document link and click **Connect document**. Choose a
+   Part Studio and link the parts you want. The app remembers these choices.
+4. Click **Send / Update**. New parts open in your selected slicer. Source files
+   are managed automatically; there is no separate save or import step.
+5. After CAD changes, click **Send / Update** again and use the slicer's native
+   **Reload from disk** on the existing parts.
 
-An Onshape panel and a small desktop helper for the **official, unmodified
-OrcaSlicer and Bambu Studio**. Normal slicer updates remain independent.
+The app cannot observe an unsaved slicer project or apply a native reload for you.
+It reports the handoff and reload requirement accurately. Repeated updates do not
+import duplicate objects. **Open selected parts again** is an explicit recovery
+option when starting a new project or reopening a missing object.
 
-Link a solid part in Onshape, refresh it to stable STL files, then use the slicer's
-native **Reload from disk**. The slicer handles arrangement, settings, slicing,
-and printing. Slicer Link never rewrites your `.3mf` project.
+The Windows installer is `dist/OnshapeSlicerLink-Setup-x86_64.exe`. It contains the
+local server, browser interface, and runtime. Leo's replacement test-account grant
+has been migrated on this computer. Other installations have a one-time local
+Onshape connection setup. [Setup](docs/helper-setup.md).
 
-The first implementation is ready for hands-on testing after its hosted app is
-configured. Live Onshape export and both stock Windows slicers have passed the
-initial checks. The Onshape extension itself still needs deployment and private
-registration. [Verification and limits](docs/stock-verification.md).
+This version uses a separate local browser window. Embedding it inside the
+Onshape document is still outstanding. Linux x86-64 source and packaging are
+provided; Linux execution is untested at Leo's request.
 
-## Get started
+[Architecture](docs/architecture.md) ? [First test](docs/user-test.md) ?
+[Verification](docs/stock-verification.md)
 
-The Windows installer is built locally at
-`dist/OnshapeSlicerLink-Setup-x86_64.exe`. This is a development installer; the
-hosted application is not live yet.
-
-The application operator runs **Set up hosted app.cmd** once to follow the guided
-Render and private Onshape registration steps. The proposed Render service costs
-about US$7.25/month before taxes or extra usage. Review that cost before creating
-it. [Deployment instructions](docs/deployment.md).
-
-After hosting is configured, install the helper, connect to Onshape, and choose a
-project folder. Keep linked STL files and the slicer project together.
-[Desktop setup](docs/helper-setup.md) ? [First user test](docs/user-test.md)
-
-Windows and Linux x86-64 are supported targets. Linux packaging is provided;
-Linux testing is explicitly waived for this handoff.
-
-## Work on the application
-
-Use Python 3.11 or newer and `uv`:
+## Development
 
 ```sh
 uv sync --locked --extra server --extra dev --extra browser
 uv run playwright install chromium
 uv run pytest tests/stock -q
+uv run python -m slicer_link.local
+uv run python scripts/build_helper.py
 ```
 
-Set `OSL_ORIGIN`, `OSL_ENCRYPTION_KEY`, `ONSHAPE_CLIENT_ID`, and
-`ONSHAPE_CLIENT_SECRET` in the server environment, then run
-`uv run onshape-slicer-link-server`. The server listens locally on port 8767.
-Use `OSL_DEVELOPMENT=1` only for a loopback HTTP origin during development.
-The desktop helper starts with `uv run onshape-slicer-link`.
+Build on the target operating system. Compile `packaging/windows.iss` with
+Inno Setup 6 for the Windows installer. The manual packaging workflow builds
+Windows and Linux artifacts and does not run Linux tests.
 
-Build on the target OS with `uv run python scripts/build_helper.py --origin
-https://YOUR-HOST`. On Windows, compile `packaging/windows.iss` with Inno Setup
-6 to create the installer. Manual packaging workflows build draft artifacts;
-they do not deploy or publish a release.
-
-[Architecture and API allowance](docs/architecture.md) ?
-[Implementation plan](docs/implementation-plan.md)
-
-The code is licensed under AGPL-3.0-only. The earlier prototype and its custom
-slicer experiments are preserved as reference in `companion/`, `experiments/`,
-and the [historical README](docs/prototype-readme.md). They are not the delivery
-path for this application.
+Licensed under AGPL-3.0-only. The earlier custom-slicer experiments and hosted
+helper remain as historical code. The supported entry point is `slicer_link.local`.

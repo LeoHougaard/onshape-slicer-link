@@ -1,81 +1,34 @@
-# Stock slicer implementation
+# Local application plan
 
-Latest direction: no paid hosting is allowed. Leo requested a quick local test.
-The immediate gate is a running loopback app using the existing replacement
-test-account grant and a verified local STL save. The Onshape iframe and a
-packaged cross-platform local installation are deferred for this quick test.
-Render setup is withdrawn; no service or hosting charge was created.
+Current direction, September 12, 2026. No paid hosting is allowed. The user wants
+easy connection to a specific Onshape document and an independently updatable,
+unmodified slicer. The quick save-file test is superseded by the local app.
 
-Local test evidence: the app is bound to `127.0.0.1:8767`. A real Edge browser
-used the replacement account, selected a solid part, refreshed it, and saved
-one 15,284-byte STL to `artifacts/local-test/project/`. No browser errors occurred.
-The page was visually inspected. Unauthenticated saves/stops and unexpected
-Host headers are rejected. The page includes a button to stop the local server.
-This is a Windows development launcher, not the final cross-platform installer.
+## Outcome and verification
 
-Current direction, September 11, 2026. This supersedes the custom-build delivery
-proposal in the historical experiment documents. Preserve the experiments as
-reference; do not modify or distribute slicer binaries.
+- [x] One local app with a packaged runtime and no hosted setup.
+- [x] Detect installed slicers, offer a native executable picker, remember choice.
+- [x] Accept Onshape document links; display document and Part Studio names;
+  remember the exact workspace and selected tab without idle CAD requests.
+- [x] One Send / Update action manages files and opens new parts in the chosen
+  stock slicer. Verify direct import in both stock Windows applications.
+- [x] Updates preserve stable source paths and do not reimport duplicate objects.
+  Report native reload and interrupted-launch uncertainty honestly.
+- [x] Connect a saved 3MF through a native picker; maintain source files beside
+  it without rewriting the project or overwriting outside edits.
+- [x] Migrate only the authorized replacement test account and cached exports.
+- [x] Test document selection, browser send, restart/retry behavior, authentication,
+  account isolation, file recovery, and saved-project source mirroring.
+- [x] Inspect final packaged browser UI, verify the native picker, rebuild and
+  install the Windows app, and verify the installed local server.
+- [ ] Leo's broader project/reload testing. Linux execution is explicitly waived.
 
-## Required outcome
+Embedding the app inside Onshape is still outstanding. This local release uses
+its own browser window. No further hosting infrastructure is proposed.
 
-- An Onshape application manages selection, links, refresh, and connection status.
-- Official OrcaSlicer and Bambu Studio remain independently updatable.
-- Geometry travels through stable STL files and the slicer's native Import and
-  Reload from disk commands. The user applies reloads; there is no UI automation
-  in the product and no claim to observe an unsaved stock slicer project.
-- Windows and Linux x86-64 are required. Target broad distro compatibility.
-  Leo explicitly waived Linux testing on September 11. Do not provision Linux
-  test environments or make Linux execution a completion gate. ARM is outside scope.
-- A packaged helper offers guided setup, detects slicers, and checks connections.
-  It must not require Python, development credentials, or a terminal for users.
-- No background Onshape polling. Cache immutable exports, share requests, count
-  actual requests, and avoid downloads when source revisions are unchanged.
-- Slicing and printing are user actions. Native reload placement and Undo rules
-  replace the experiment's stronger geometry-transaction guarantees.
-- Failed exports retain the last good files. Keep previous downloaded geometry.
-  Store portable link metadata beside source files; never rewrite user 3MF files.
-- Further live CAD testing uses only the designated test account.
-
-## Implementation and verification
-
-1. [x] Establish stock reload behavior with isolated disposable projects.
-2. [x] Build the portable source model, validated binary STL handling, export
-       cache, request accounting, and safe local file transactions.
-3. [x] Build one hosted service with SQLite persistence, OAuth, a small Onshape
-       panel, paired devices, and authenticated transfer jobs.
-4. [x] Build the Windows/Linux helper, guided setup, URI handoff, slicer discovery,
-       and platform packaging. Keep OS integration out of the shared core.
-5. [x] Exercise the core failure cases, API-call budgets, browser UI, packaged
-       helper startup, and both stock slicers. Leo will do the broader hands-on
-       tests. Linux execution is explicitly waived.
-6. [x] Prepare Render deployment, the operator wizard, and exact Onshape fields.
-       The source is in Leo's private GitHub repository. The Windows installer
-       is built. Hosting and private registration require Leo's account actions.
-7. [ ] User handoff: create the Render service, authorize the hosting charge,
-       register/subscribe the private Onshape app, and perform the first user test.
-
-The finish line is a verified user workflow, not a successful build. Record
-unavailable environments and unverified behavior explicitly. Do not treat the
-old custom-build results as evidence for stock slicers.
-
-## Evidence so far
-
-- Shared core, HTTP, auth, and browser integration: 23 checks passed, including rollback after
-  a partial file commit, recovery after restart, delivery receipt retries,
-  stale transfers, account/device isolation, and persistent export caching.
-- Edge browser at 360 and 320 px: panel selection through real HTTP service and
-  helper file transfer passed using a fake CAD provider. Screenshot inspected.
-- Installed unmodified Orca development build: native Reload All changed an
-  asymmetric fixture from 32 to 46 mm, preserving its saved instance transform.
-  Bambu's selected part also changed from 32 to 46 mm. A two-plate Bambu check
-  retained transforms, settings, and plate assignments while leaving the other
-  part unchanged. Broader reload/reopen/Undo checks are handed to Leo.
-- Windows bundled helper built; its setup window was opened and inspected.
-  The Inno Setup installer also compiled successfully.
-- The new exporter passed a live read-only refresh on the replacement test
-  account. Initial refresh: five HTTP responses including the redirect. A second
-  refresh reused the persistent export cache with one revision check.
-- No live hosted app or new Onshape extension has been deployed yet.
-- Linux test image downloads finished before the waiver arrived. No VM was
-  created or started. Linux testing will not continue.
+Evidence: 35 Windows automated checks passed. Direct command-line STL imports in
+both installed stock slicers were saved through their native Save commands and
+the resulting 3MF model/source metadata was inspected. A live document-root URL
+resolved its name, default workspace and Part Studio through the new resolver.
+The core export and unchanged-cache behavior were verified earlier on the same
+replacement account. No CAD model edits were made for these checks.

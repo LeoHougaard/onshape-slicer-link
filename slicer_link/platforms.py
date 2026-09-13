@@ -5,6 +5,7 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 from .files import atomic_write
@@ -71,6 +72,29 @@ def launch(command):
         startup.wShowWindow = 0
         kwargs["startupinfo"] = startup
     subprocess.Popen(command, **kwargs)
+
+
+def pick_slicer(kind="slicer"):
+    """A native chooser in its own GUI process; no Tk calls from HTTP threads."""
+    folder = config_dir() / "local"
+    folder.mkdir(parents=True, exist_ok=True)
+    descriptor, name = tempfile.mkstemp(prefix=".picker-", suffix=".json", dir=folder)
+    os.close(descriptor)
+    path = Path(name)
+    command = [sys.executable]
+    if not getattr(sys, "frozen", False):
+        command += ["-m", "slicer_link.local"]
+    command += ["--pick-slicer", str(path), "--pick-kind", kind]
+    try:
+        options = {"stdout": subprocess.DEVNULL, "stderr": subprocess.DEVNULL}
+        if sys.platform == "win32":
+            options["creationflags"] = subprocess.CREATE_NO_WINDOW
+        subprocess.run(command, check=True, timeout=300, **options)
+        return json.loads(path.read_text("utf-8"))
+    except (OSError, ValueError, subprocess.SubprocessError):
+        raise LinkError("The file picker did not finish. Try again or paste the executable path.") from None
+    finally:
+        path.unlink(missing_ok=True)
 
 
 def open_folder(path):

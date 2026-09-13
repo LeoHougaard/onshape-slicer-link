@@ -40,7 +40,7 @@ class Settings:
     @classmethod
     def environment(cls):
         return cls(
-            os.environ.get("OSL_ORIGIN") or os.environ["RENDER_EXTERNAL_URL"],
+            os.environ["OSL_ORIGIN"],
             os.environ.get("OSL_DATA_DIR", "data"),
             os.environ["OSL_ENCRYPTION_KEY"],
             os.environ.get("ONSHAPE_CLIENT_ID", ""),

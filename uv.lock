@@ -490,11 +490,13 @@ wheels = [
 
 [[package]]
 name = "onshape-slicer-link"
-version = "0.1.0"
+version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "cryptography" },
+    { name = "fastapi" },
     { name = "keyring" },
+    { name = "uvicorn" },
 ]
 
 [package.optional-dependencies]
@@ -511,15 +513,11 @@ dev = [
     { name = "pytest" },
     { name = "ruff" },
 ]
-server = [
-    { name = "fastapi" },
-    { name = "uvicorn" },
-]
 
 [package.metadata]
 requires-dist = [
     { name = "cryptography", specifier = ">=44,<47" },
-    { name = "fastapi", marker = "extra == 'server'", specifier = ">=0.115,<1" },
+    { name = "fastapi", specifier = ">=0.115,<1" },
     { name = "httpx", marker = "extra == 'dev'", specifier = ">=0.28,<1" },
     { name = "keyring", specifier = ">=25,<26" },
     { name = "pillow", marker = "extra == 'desktop-test'", specifier = ">=11,<13" },
@@ -528,7 +526,7 @@ requires-dist = [
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8,<10" },
     { name = "pywinauto", marker = "sys_platform == 'win32' and extra == 'desktop-test'", specifier = ">=0.6.9,<1" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.11,<1" },
-    { name = "uvicorn", marker = "extra == 'server'", specifier = ">=0.34,<1" },
+    { name = "uvicorn", specifier = ">=0.34,<1" },
 ]
 provides-extras = ["server", "dev", "browser", "desktop-test"]
 

@@ -1,22 +1,18 @@
 """Build a helper with its runtime. Run on the target OS, never cross-compile."""
 
 import argparse
-import json
 import platform
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 
-from slicer_link.model import service_origin
-
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--origin", help="Public HTTPS app address baked into setup")
-    args = parser.parse_args()
+    parser.parse_args()
     if platform.machine().lower() not in {"amd64", "x86_64"}:
         raise SystemExit("Release builds target Windows/Linux x86-64.")
     target = "windows" if sys.platform == "win32" else "linux"
@@ -42,15 +38,15 @@ def main():
         str(ROOT),
         "--collect-submodules",
         "keyring.backends",
+        "--collect-submodules",
+        "uvicorn",
+        "--collect-data",
+        "slicer_link",
     ]
     if target == "windows":
         command += ["--windowed"]
-    if args.origin:
-        address = staging / "service.json"
-        address.write_text(json.dumps({"origin": service_origin(args.origin)}), encoding="utf-8")
-        command += ["--add-data", str(address) + ":slicer_link/assets"]
     command.append(str(ROOT / "packaging" / "helper_entry.py"))
-    subprocess.run(command, cwd=ROOT, check=True)
+    subprocess.run(command, cwd=ROOT, check=True, stderr=subprocess.STDOUT)
     destination = ROOT / "dist" / target / "OnshapeSlicerLink"
     shutil.copyfile(ROOT / "LICENSE", destination / "LICENSE")
     shutil.copyfile(ROOT / "docs" / "helper-setup.md", destination / "READ-ME.md")

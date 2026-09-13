@@ -1,97 +1,95 @@
-# Stock-slicer application
+# Local slicer connection
 
-The supported direction is one hosted Onshape application and one small desktop
-helper. The slicers are official installations. The older native fork experiment
-remains in the repository as reference.
+One local process serves the browser UI, talks to Onshape, manages source files,
+and opens the selected stock slicer. It binds only to 127.0.0.1. There is no hosted
+service, public tunnel, paired helper, or paid infrastructure in the supported path.
 
 ```mermaid
 flowchart LR
-    A[Onshape panel] -->|OAuth and manual refresh| B[One Python service]
-    B -->|Pinned exports| C[Onshape API]
-    B --> D[(SQLite and export cache)]
-    A -->|Open helper with job ID| E[Windows or Linux helper]
-    E -->|Authenticated download| B
-    E --> F[Stable STL files and link manifest]
-    F -->|Native Import or Reload from disk| G[Official OrcaSlicer or Bambu Studio]
+    A[Local browser app] --> B[Local Python service]
+    B -->|Explicit document selection and updates| C[Onshape API]
+    B --> D[(Encrypted tokens, links, export cache)]
+    B --> E[Managed source files]
+    B -->|Open new models| F[Chosen stock slicer]
+    E -->|User selects Reload from disk| F
 ```
 
-## What lives where
+## User workflow
 
-`slicer_link/model.py` defines source identity and binary STL validation.
-`files.py` owns local file transactions and recovery. These have no desktop or
-web dependencies. `onshape.py` owns CAD requests and persistent immutable export
-caching. `auth.py`, `store.py`, and `service.py` form the hosted application.
-`web/` is plain HTML, CSS, and JavaScript, with no frontend build toolchain.
-`helper.py` provides the short setup and transfer windows. `platforms.py` contains
-the Windows and Linux integration.
+The user chooses a detected OrcaSlicer or Bambu Studio installation. A native
+file picker handles portable executables and AppImages. Document selection accepts
+an Onshape document or Part Studio link, resolves readable document and tab names,
+and remembers the exact workspace and Part Studio. A general document link uses
+the default workspace. Saved versions are rejected for this editable link workflow.
+The part list is scoped to the selected document and workspace.
 
-The service runs one process with a persistent SQLite database and mesh cache.
-It serializes exports, sharing revision checks and cached geometry across requests
-for both slicers. A job interrupted by a service restart fails visibly; the user
-can refresh again. Do not add multiple Uvicorn workers to this design.
+Send / Update validates and saves every selected model, then opens only parts
+not previously handed to that slicer. Source folders and import histories are
+separate for each account and slicer. The app does not alter slicer binaries,
+preferences, projects, arrangement, support painting, slicing, or printing.
+A slicer can show its own import prompt or choose an existing/new window according
+to its ordinary open-file behavior. Process launch is not proof of successful GUI
+import; the UI calls it a handoff and tells the user to finish native prompts.
 
-The helper runs on demand. It keeps a computer token in the native desktop
-credential store, configuration in the user's app settings folder, and project
-metadata beside the models. The URI contains only a job ID. It cannot supply an
-arbitrary download URL, command, or local destination.
+Existing parts require native Reload from disk. Repeated sends do not import
+copies, even if a request is retried after a lost response. An interrupted launch
+is reported as uncertain; the app does not blindly retry a potentially completed
+import. Open selected parts again is an explicit recovery operation.
 
-## Source identity and refresh
+Saved 3MF files may store source basenames rather than absolute paths. Connect
+saved project records a user-chosen 3MF location. Later sends mirror managed source
+files beside it so native reload can find them after reopening. The application
+never rewrites the 3MF, and refuses to overwrite unrelated or externally edited
+source files. If the project moves, reconnect its new location. Only one saved
+project per document/workspace/slicer is connected at a time.
 
-Choose parts fetches a Part Studio catalog at one immutable document microversion.
-A link retains that document, workspace, element, configuration, microversion,
-and part ID. Names are labels. A refresh checks the current microversion once per
-document/workspace, translates old part IDs when needed, and exports that immutable
-target snapshot. Missing or ambiguous translations fail without replacing files.
+## Code ownership
 
-The helper downloads and validates all required files before replacing any source.
-Each source has a permanent ASCII filename with a unique link ID. Per-folder
-locking, atomic single-file writes, a recovery journal, and cached previous geometry
-protect interrupted updates. Older queued transfers cannot replace newer downloads.
-An acknowledged job can be retried without applying it again.
+- `local.py`: packaged process lifecycle, first connection, native password store,
+  reopen existing process, and native file picker subprocess.
+- `local_service.py`: authenticated local document, slicer, project, and send routes.
+- `documents.py`: strict Onshape URL parsing and explicit document/tab lookup.
+- `sync.py`: export, durable file application, stock process launch, import history,
+  saved-project source copies, and retry handling.
+- `onshape.py`, `files.py`, `model.py`, `store.py`, `auth.py`: shared export cache,
+  geometry checks, crash recovery, SQLite persistence, and OAuth.
+- `web/local.*`: the local user interface, with no frontend build tool.
 
-Never read or rewrite the user's `.3mf` in product code. The slicer owns project
-settings and geometry in memory. The app reports files ready to reload; it cannot
-verify unsaved slicer state. Native reload may recenter new geometry and applies
-the slicer's bed-placement rules. Supports, seams, and other geometry-dependent
-settings need user review.
+The earlier hosted panel and helper remain for reference and shared tests.
+The installer entry point is `slicer_link.local`, not the hosted helper.
 
-## API allowance
+## Requests and persistence
 
-Onshape does have annual API allowances. Its published table lists 2,500 calls
-per year for Free, Standard, and EDU Student users; 5,000 per company user for
-Professional; and 10,000 per full company user for Enterprise. Private OAuth
-app traffic counts against the application owner. Public App Store OAuth apps
-are exempt from annual allowance accounting but retain rate limits.
-[Onshape API limits](https://onshape-public.github.io/docs/auth/limits/)
+No idle Onshape polling. Connecting a document uses two requests for its metadata
+and tabs. Choosing parts uses a pinned snapshot catalog. Sending uses one current
+revision check per source workspace and reuses immutable exports when possible.
+The verified unchanged live refresh uses one Onshape request. Opening the app and
+restoring saved UI choices makes no CAD requests.
 
-The app never polls Onshape in the background. An unchanged refresh normally
-makes one revision request per distinct document/workspace. Browser job-status
-checks and helper transfer-status checks contact this service only. CAD exports
-are shared between slicers. Successful HTTP request accounting is recorded locally,
-including export redirects; this is an app diagnostic, not an authoritative
-remaining Onshape balance. Check My account > Developer for the account allowance.
+Onshape has annual allowances as well as rate limits. Successful private OAuth
+requests count against the owning user's/company's allowance; public App Store
+applications have different annual treatment. The app records its successful
+requests and handles 402/429 without a retry storm.
+[Onshape limits](https://onshape-public.github.io/docs/auth/limits/).
 
-## Operational limits
+Tokens are encrypted in SQLite. The key and private application credentials live
+in Windows Credential Manager or Secret Service/KWallet. Browser sessions are
+opaque, temporary, and bootstrapped through one-use codes. Host and Origin checks
+protect loopback actions. No browser input becomes an arbitrary command or URL.
+CAD requests go only to the Onshape API client.
 
-This first version supports up to 100 solid-part links per account and bounded
-binary STL downloads of 32 MiB per part. It excludes assemblies, sheet bodies,
-composites, and mesh bodies from selection. Large models may require a larger
-host plan. The cache currently retains immutable exports; monitor disk use and
-increase storage when needed. CAD and print operations are always user initiated.
+File replacement is atomic per file with journal recovery. Managed folders are
+validated before writes. A saved-project mirror failure can occur after the main
+managed source folder has updated; the send is reported failed and no new slicer
+launch occurs. A later explicit send can complete the mirror safely.
 
-Keep the database, mesh directory, and server encryption key backed up together.
-Losing the encryption key requires reconnecting Onshape accounts. Device tokens
-can be revoked from the panel. The service uses opaque sessions instead of
-third-party cookies, validates browser origins, and restricts download access to
-the job's account and paired computer.
+## Current limits
 
-## Maintaining it
+The app uses a separate local browser window. Embedding in Onshape's HTTPS iframe
+is still outstanding. Stock slicers do not expose a verified remote replacement
+interface for unsaved objects, so native reload remains a user action.
 
-`uv.lock` pins dependencies. `packaging/requirements-server.txt` is its hashed
-server export. Update them together, run the focused Windows checks, and build
-the helper again. Package each desktop version on its target OS. Linux tests are
-explicitly waived by Leo; packaging support is retained without a tested-distro claim.
-
-The first user test should cover a new link, a CAD change, native reload, project
-reopen, and restore using an ordinary print project. [Current evidence](stock-verification.md)
-separates actual live/stock results from simulated integration tests.
+Windows packaging and execution are verified. Linux source and packaging are
+provided but Linux execution is explicitly untested. Flatpak launches request
+read-only access to their managed source folder without persistent overrides.
+Large exports may need substantial memory; model exports are limited to 32 MiB.

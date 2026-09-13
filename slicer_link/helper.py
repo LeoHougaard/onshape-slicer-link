@@ -12,7 +12,7 @@ import webbrowser
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.parse import urlsplit
-from urllib.request import Request, build_opener
+from urllib.request import ProxyHandler, Request, build_opener
 
 from . import __version__, platforms
 from .files import Library
@@ -37,7 +37,10 @@ class Remote:
     def __init__(self, origin, token="", *, development=False):
         self.origin = service_origin(origin, development=development)
         self.token = token
-        self.opener = build_opener(NoRedirect)
+        handlers = [NoRedirect]
+        if urlsplit(self.origin).hostname in {"localhost", "127.0.0.1"}:
+            handlers.append(ProxyHandler({}))
+        self.opener = build_opener(*handlers)
 
     def request(self, path, body=None, *, binary=False):
         require(path.startswith("/api/") or path == "/health", "Invalid application endpoint.")

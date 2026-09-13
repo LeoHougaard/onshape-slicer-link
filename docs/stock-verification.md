@@ -1,5 +1,24 @@
 # Stock application verification
 
+September 12 local application update: 35 automated Windows checks passed.
+These include document-root URL selection, persisted document/slicer choices,
+one-click browser send, stable paths, no duplicate imports, interrupted launch,
+failed export/start, ownership/Host/Origin boundaries, and saved-project source
+mirroring without modifying the 3MF. A real document-root API lookup passed on
+the replacement test account. The packaged browser UI and native picker cancel
+flow passed. The rebuilt 0.2.0 installer completed successfully and the installed
+application is running with the migrated test connection.
+
+Both installed stock slicers accepted ordinary STL command-line input. Their
+native Save commands produced 3MF files containing the intended test geometry and
+source filenames. Evidence is in `artifacts/stock/direct-send/`. Disposable data
+directories isolated the native checks from the user's running slicer. No product
+code sends UI keystrokes or changes slicer preferences.
+
+The released local launcher replaces the hosted prerequisite below. The remaining
+Onshape integration limit is embedding the app inside the document, not hosting.
+
+
 September 11, 2026. This record covers the new application, not the earlier custom
 slicer builds. Leo will perform broader hands-on testing. Linux tests are waived.
 
