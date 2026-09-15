@@ -1,22 +1,30 @@
-# First local test
+# Check your first setup
 
-1. Open Slicer Link and choose the installed slicer you want to use.
-2. Paste the test document's Onshape link and choose **Connect document**.
-   Confirm its name, select the intended Part Studio, and link a solid part.
-3. Click **Send / Update**. Confirm the part opens in the selected stock slicer.
-   There should be no file-save dialog or manual STL import.
-4. Arrange the part and change an object setting in the slicer. Edit its shape in
-   Onshape, then click **Send / Update** again. No duplicate object should appear.
-5. In the slicer, select the existing object and use **Reload from disk**. Check
-   dimensions, placement, object settings, and any painted supports.
-6. Save the slicer project. Use **Connect saved project** to select its .3mf,
-   then Send / Update once. Reopen the project, make another CAD change, and
-   repeat the update/reload. Report if the slicer cannot find its managed source file.
-7. Close and reopen Slicer Link. Confirm that the document and slicer choices
-   persist. Repeat with the other slicer if desired.
+Use this checklist after the [setup guide](helper-setup.md). It covers the local
+Windows test release. Choose a simple test part; no printer is required.
 
-**Open selected parts again** is for a new slicer project or an object you have
-removed. It intentionally imports again, so it can create duplicates.
+- [ ] Choose one slicer and open an empty project. Link one solid Onshape part
+  and click **Send / Update**. The part appears without manually exporting or
+  importing an STL.
+- [ ] Move and rotate the part in the slicer. Change a setting such as infill.
+  Note the position and setting so you can compare them after reloading.
+- [ ] Change an obvious dimension in Onshape. Click **Send / Update** again.
+  There should still be only one object in the slicer.
+- [ ] Select that object, right-click it, and choose **Reload from disk**.
+  Check the new shape, position, orientation, and print setting. Report any
+  unwanted shift. Native reload can recenter changed geometry.
+- [ ] Save the slicer project as `.3mf`. In Slicer Link, use **Connect saved
+  project** and click **Send / Update** once to prepare its source files.
+- [ ] Close and reopen that project. Make another CAD change, send, and reload.
+  Confirm the slicer finds its source file and the object updates.
+- [ ] Use **Stop local app** under **Connection & API use**, then reopen
+  **Onshape Slicer Link** from Start. Your slicer, document, and links should
+  still be selected.
 
-The app does not slice or print automatically. Linux testing is optional and has
-not been performed by the agent.
+If you try multiple objects or plates, check each updated object. Review painted
+supports and materials separately; this checklist does not establish that every
+kind of setting survives a geometry change. Slicing and printing remain manual.
+
+For a failure, [open an issue](https://github.com/LeoHougaard/onshape-slicer-link/issues)
+with the failed step, expected result, actual result, and your Windows and slicer
+versions. Omit secrets and private CAD files. Linux testing is not required.

@@ -1,5 +1,9 @@
 # Stock application verification
 
+This is a historical test record. For installation, use the
+[setup guide](helper-setup.md). The separate [embedded preview](embedded-setup.md)
+has since displayed both stock slicers inside Onshape.
+
 September 12 local application update: 35 automated Windows checks passed.
 These include document-root URL selection, persisted document/slicer choices,
 one-click browser send, stable paths, no duplicate imports, interrupted launch,
@@ -15,8 +19,8 @@ source filenames. Evidence is in `artifacts/stock/direct-send/`. Disposable data
 directories isolated the native checks from the user's running slicer. No product
 code sends UI keystrokes or changes slicer preferences.
 
-The released local launcher replaces the hosted prerequisite below. The remaining
-Onshape integration limit is embedding the app inside the document, not hosting.
+The local launcher replaced the hosted prerequisite below. The later embedded
+preview is separate from this installer's workflow.
 
 
 September 11, 2026. This record covers the new application, not the earlier custom
