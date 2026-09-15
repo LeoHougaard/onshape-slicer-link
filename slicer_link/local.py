@@ -11,7 +11,6 @@ import webbrowser
 from pathlib import Path
 
 import uvicorn
-from cryptography.fernet import Fernet
 
 from . import __version__, platforms
 from .auth import Auth
@@ -33,67 +32,13 @@ def configuration(value=None):
     return json.loads(saved) if saved else None
 
 
-def setup():
-    """One-time OAuth application credentials, kept in the native password store."""
-    import tkinter as tk
-    from tkinter import ttk
+def setup(existing=None):
+    from .setup import setup as wizard
 
-    result = []
-    root = tk.Tk()
-    root.title("Connect local Slicer Link")
-    frame = ttk.Frame(root, padding=24)
-    frame.pack(fill="both", expand=True)
-    ttk.Label(frame, text="Connect to Onshape", font=("Segoe UI", 18, "bold")).pack(anchor="w")
-    ttk.Label(
-        frame,
-        wraplength=510,
-        text=(
-            "Create a private Connected Desktop App in Onshape's Developer settings. "
-            "Enable only Read documents. Use this redirect URL:\n\n" + ORIGIN + "/auth/callback\n\n"
-            "Paste its client ID and secret below. They stay in your computer's password store. "
-            "No server, domain, or paid hosting is needed."
-        ),
-    ).pack(pady=16)
-    ttk.Button(
-        frame,
-        text="Open Onshape Developer settings",
-        command=lambda: webbrowser.open("https://cad.onshape.com/user/settings"),
-    ).pack(anchor="w")
-    client_id, client_secret = tk.StringVar(), tk.StringVar()
-    for label, variable, masked in [("Client ID", client_id, False), ("Client secret", client_secret, True)]:
-        ttk.Label(frame, text=label).pack(anchor="w", pady=(12, 4))
-        ttk.Entry(frame, textvariable=variable, show="*" if masked else "", width=65).pack(fill="x")
-    message = tk.StringVar()
-    ttk.Label(frame, textvariable=message, wraplength=510).pack(pady=10)
-
-    def save():
-        if not client_id.get().strip() or not client_secret.get().strip():
-            message.set("Enter both values from your private Onshape application.")
-            return
-        value = {
-            "client_id": client_id.get().strip(),
-            "client_secret": client_secret.get().strip(),
-            "key": Fernet.generate_key().decode(),
-            "owner": "",
-            "control": secrets.token_urlsafe(32),
-        }
-        try:
-            configuration(value)
-        except LinkError as error:
-            message.set(str(error))
-            return
-        result.append(value)
-        root.destroy()
-
-    ttk.Button(frame, text="Save and sign in", command=save).pack(anchor="w")
-    root.mainloop()
-    return result[0] if result else None
+    return wizard(configuration, existing=existing)
 
 
-def run():
-    config = configuration() or setup()
-    if not config:
-        return
+def local_listener(config, reconfigure):
     listener = socket.socket()
     if hasattr(socket, "SO_EXCLUSIVEADDRUSE"):
         listener.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
@@ -102,9 +47,41 @@ def run():
         listener.listen()
     except OSError:
         listener.close()
-        # Reopening the desktop shortcut reuses the existing local process.
-        Remote(ORIGIN, config["control"], development=True).request("/api/local/open", {})
+        require(config, "Another application is using Slicer Link's local address. Close it and retry.")
+        remote = Remote(ORIGIN, config["control"], development=True)
+        if not reconfigure:
+            remote.request("/api/local/open", {})
+            return None
+        remote.request("/api/local/exit", {})
+        for _ in range(100):
+            listener = socket.socket()
+            if hasattr(socket, "SO_EXCLUSIVEADDRUSE"):
+                listener.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+            try:
+                listener.bind(("127.0.0.1", 8767))
+                listener.listen()
+                return listener
+            except OSError:
+                listener.close()
+                time.sleep(0.1)
+        raise LinkError("Slicer Link is still closing. Open connection setup again in a moment.")
+    return listener
+
+
+def run(*, reconfigure=False):
+    config = configuration()
+    listener = local_listener(config, reconfigure)
+    if listener is None:
         return
+    try:
+        if reconfigure or not config:
+            config = setup(config)
+        if not config:
+            listener.close()
+            return
+    except BaseException:
+        listener.close()
+        raise
     directory = platforms.config_dir() / "local"
     directory.mkdir(parents=True, exist_ok=True)
     logging.basicConfig(filename=directory / "app.log", level=logging.WARNING)
@@ -151,6 +128,8 @@ def run():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--version", action="version", version=__version__)
+    parser.add_argument("--setup", action="store_true", help="Open the guided Onshape connection setup.")
+    parser.add_argument("--install-shortcut", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--pick-slicer", help=argparse.SUPPRESS)
     parser.add_argument(
         "--pick-kind", choices=["slicer", "project"], default="slicer", help=argparse.SUPPRESS
@@ -180,7 +159,9 @@ def main():
             path.write_text(json.dumps(selected), encoding="utf-8")
             root.destroy()
             return
-        run()
+        if args.install_shortcut:
+            platforms.register_local_shortcut()
+        run(reconfigure=args.setup)
     except (LinkError, OSError, ValueError) as error:
         import tkinter as tk
         from tkinter import messagebox

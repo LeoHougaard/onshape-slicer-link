@@ -11,4 +11,4 @@ if [[ "$source_dir" != "$(cd -- "$install_dir" && pwd -P)" ]]; then
   cp -R -- "$source_dir/OnshapeSlicerLink" "$source_dir/_internal" "$source_dir/LICENSE" "$source_dir/READ-ME.md" "$install_dir/"
 fi
 chmod u+x -- "$install_dir/OnshapeSlicerLink"
-exec "$install_dir/OnshapeSlicerLink"
+exec "$install_dir/OnshapeSlicerLink" --install-shortcut

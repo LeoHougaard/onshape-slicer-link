@@ -1,66 +1,27 @@
 # Onshape Slicer Link
 
-Send parts from Onshape to your normal, unmodified OrcaSlicer or Bambu Studio.
-Slicer Link runs on your computer and manages the model files for you. You keep
-using your slicer to arrange, slice, and print, and update it normally.
+Send Onshape parts to your normal OrcaSlicer or Bambu Studio. Runs locally.
 
-## Start here
+## Install
 
-**[Download the Windows installer](https://github.com/LeoHougaard/onshape-slicer-link/releases/tag/local-bridge-v0.2.0-test)**
+**[Download for Windows](https://github.com/LeoHougaard/onshape-slicer-link/releases/download/v0.3.0-test/OnshapeSlicerLink-Setup-x86_64.exe)**
 
-[Linux x86-64 test download and Arch instructions](docs/helper-setup.md#arch-linux-and-other-linux-desktops)
+Open the installer, then open **Onshape Slicer Link**. The setup wizard walks
+you through connecting Onshape, choosing your slicer, and sending your first part.
 
-**[Follow the step-by-step setup guide](docs/helper-setup.md)**
+**[Linux x86-64 download](https://github.com/LeoHougaard/onshape-slicer-link/releases/download/v0.3.0-test/onshape-slicer-link-linux-x86_64.tar.gz)** ? [Linux setup](docs/helper-setup.md#arch-linux-and-other-linux-desktops)
 
-You need a Windows PC with an Intel or AMD 64-bit processor, an Onshape account,
-internet access, and either slicer installed. The installer includes its runtime;
-you do not need Python, a terminal, Docker, a server, or BIOS changes.
+## Use
 
-This is an early test release. Each person connects their own Onshape account
-once. That involves copying two values from Onshape's settings; the guide shows
-where to find them. No paid hosting is needed. Onshape API limits apply.
+After changing a part in Onshape, click **Send / Update**, then use
+**Reload from disk** on the existing object in your slicer.
 
-## What you can try today
+The app manages the model files. Your slicer stays unmodified and updates normally.
 
-1. Choose your slicer and paste an Onshape document link.
-2. Choose a Part Studio and link a solid part.
-3. Click **Send / Update**. The part opens in your slicer.
-4. After changing the part in Onshape, click **Send / Update**, then use
-   **Reload from disk** in the slicer.
+This is a test release. Linux, including Arch, remains untested. The slicer-inside-Onshape
+preview is still in development and is not included in these downloads.
 
-You do not export, name, or import an STL yourself. Reloading is still manual.
-Slicer Link cannot choose between several open projects or verify what an
-unsaved project contains. Start with one slicer window and a simple test part.
+[Quick setup](docs/helper-setup.md) ? [Saved projects and everyday use](docs/usage.md) ?
+[Troubleshooting](docs/troubleshooting.md) ? [Report a problem](https://github.com/LeoHougaard/onshape-slicer-link/issues)
 
-See [everyday use and reloading](docs/helper-setup.md#update-a-part),
-[saved projects](docs/helper-setup.md#save-your-project-and-keep-the-link), and the
-[first-test checklist](docs/user-test.md).
-
-## What about the slicer inside Onshape?
-
-There are two versions of the project. The download above is the local app.
-
-| Version | Where it opens | Ready to install? |
-| --- | --- | --- |
-| Local app | A separate browser tab and your installed slicer | Windows test installer available; follow the setup guide |
-| Embedded preview | The complete stock slicer inside an Onshape tab | Needs developer preparation; no end-user installer yet |
-
-The embedded preview has displayed both slicers in Onshape and imported real CAD
-parts. The complete one-click update flow and easy installation are unfinished.
-[Read about trying the preview](docs/embedded-setup.md).
-
-An experimental Linux x86-64 package is also available for testing,
-including Arch users. Linux installation and execution remain untested.
-macOS and ARM are not supported targets.
-
-## Help and development
-
-- [Setup and troubleshooting](docs/helper-setup.md)
-- [Report a problem](https://github.com/LeoHougaard/onshape-slicer-link/issues)
-- [Build and run from source](docs/development.md)
-- [Local app architecture](docs/architecture.md)
-- [Windows verification record](docs/stock-verification.md)
-
-This project is licensed under [AGPL-3.0-only](LICENSE). Earlier hosted-service
-and custom-slicer experiments remain in the repository as development history.
-Use the setup guide above when installing the current local app.
+[Development](docs/development.md) ? [Embedded preview](docs/embedded-setup.md) ? [License](LICENSE)

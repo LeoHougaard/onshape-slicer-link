@@ -1,5 +1,12 @@
 # Stock application verification
 
+Version 0.3.0 adds the native connection wizard and guided slicer/document/part
+selection. All 54 Windows tests passed, including Back/Cancel, secret-store
+failure recovery, connection restart authorization, and remembered setup.
+The five native screens and browser flow were inspected with disposable test
+credentials and CAD data. This did not register another live Onshape application.
+Linux execution remains untested.
+
 This is a historical test record. For installation, use the
 [setup guide](helper-setup.md). The separate [embedded preview](embedded-setup.md)
 has since displayed both stock slicers inside Onshape.

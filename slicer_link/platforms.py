@@ -153,6 +153,29 @@ def helper_command():
     return [str(executable), "-m", "slicer_link.helper"]
 
 
+def local_command():
+    command = helper_command()
+    if not getattr(sys, "frozen", False):
+        command[-1] = "slicer_link.local"
+    return command
+
+
+def register_local_shortcut():
+    """Install a per-user Linux application menu entry, with a setup action."""
+    if sys.platform == "win32":
+        return
+    applications = Path(os.environ.get("XDG_DATA_HOME", Path.home() / ".local/share")) / "applications"
+    command = local_command()
+    content = (
+        "[Desktop Entry]\nType=Application\nName=Onshape Slicer Link\n"
+        "Comment=Send Onshape parts to your slicer\nTerminal=false\nCategories=Graphics;Engineering;\n"
+        "Exec=" + desktop_exec(command).removesuffix(" %u") + "\nActions=Setup;\n\n"
+        "[Desktop Action Setup]\nName=Connection setup\n"
+        "Exec=" + desktop_exec(command + ["--setup"]).removesuffix(" %u") + "\n"
+    )
+    atomic_write(applications / "onshape-slicer-link.desktop", content.encode())
+
+
 def desktop_exec(arguments):
     """Desktop Entry Exec quoting, including its field-code percent escaping."""
 

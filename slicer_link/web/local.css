@@ -1,2 +1,4 @@
 input[type="url"],input[type="text"]{width:100%;font:inherit;border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:12px;background:white}
 #catalog{margin-top:16px}#status{margin:16px 0 0;white-space:pre-line;overflow-wrap:anywhere}details p{margin-top:8px}#slicer{margin-bottom:12px}
+#setup-progress{color:var(--green);font-size:12px;font-weight:600;margin-bottom:12px}
+#setup-back,#change-setup{margin-bottom:14px}

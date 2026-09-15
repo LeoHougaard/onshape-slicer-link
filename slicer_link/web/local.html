@@ -12,34 +12,44 @@
   <div id="notice" role="alert" hidden></div>
   <p id="connecting">Connecting to your local app...</p>
   <div id="app" hidden>
-    <section>
+    <div id="setup-progress" role="status" aria-live="polite"></div>
+    <button id="setup-back" class="text" hidden>Back</button>
+    <button id="change-setup" class="text" hidden>Change slicer or document</button>
+    <section id="slicer-step">
       <h2>Your slicer</h2>
+      <p>Choose the app you already use.</p>
       <label for="slicer">Send parts to</label><select id="slicer"><option value="">Choose your slicer</option></select>
       <details><summary>Can't find your slicer?</summary>
         <label for="slicer-name">Application</label><select id="slicer-name"><option>OrcaSlicer</option><option>Bambu Studio</option></select>
         <label for="slicer-path">Installed executable or AppImage path</label><input id="slicer-path" type="text" spellcheck="false">
         <button id="browse-path">Browse...</button> <button id="save-path">Use this slicer</button>
       </details>
+      <button id="slicer-next" class="primary">Next</button>
     </section>
-    <section>
+    <section id="document-step">
       <h2>Your Onshape document</h2>
+      <p>Open your part in Onshape and copy the address from your browser.</p>
       <label for="studio-url">Onshape document link</label><input id="studio-url" type="url" placeholder="Paste a document or Part Studio link">
       <button id="document">Connect document</button>
+    </section>
+    <section id="parts-step">
+      <h2 id="parts-heading">Choose a part</h2>
+      <p><a id="document-link" target="_blank" rel="noopener noreferrer"></a></p>
+      <details id="add-parts-options">
+        <summary id="add-parts-label">Add another part</summary>
       <div id="document-details" hidden>
-        <p><a id="document-link" target="_blank" rel="noopener noreferrer"></a></p>
         <label for="studios">Part Studio</label><select id="studios"></select>
         <button id="choose">Choose parts</button>
       </div>
       <div id="catalog" hidden><label for="parts">Solid part</label><select id="parts"></select><button id="add">Link part</button></div>
+      </details>
       <p id="empty" class="empty">Link a part to send it to your slicer.</p>
       <ul id="links" aria-label="Linked parts"></ul>
       <button id="send" class="primary wide" disabled>Send / Update</button>
       <p id="status" role="status" aria-live="polite"></p>
     </section>
-    <section class="instructions">
-      <h2>New parts open in your slicer</h2>
-      <p>The app manages the source files automatically. After updating an existing part, select it in your slicer and use <strong>Reload from disk</strong>.</p>
-      <p class="quiet">Slicer Link cannot see unsaved slicer projects or confirm a reload. Your slicer controls placement, supports, slicing, and printing.</p>
+    <section id="daily-help" class="instructions">
+      <p>After a CAD edit: <strong>Send / Update</strong>, then <strong>Reload from disk</strong> in your slicer.</p>
       <details><summary>Keep the link after reopening a saved project</summary>
         <p>Save your project normally in the slicer, then connect its .3mf here. The app will keep source files beside it automatically so Reload from disk can find them.</p>
         <p id="project-name" class="quiet"></p><button id="project">Connect saved project</button>
@@ -49,7 +59,7 @@
         <button id="reopen">Open selected parts again</button>
       </details>
     </section>
-    <details><summary>Connection &amp; API use</summary><p id="usage"></p><p class="quiet">Onshape is contacted when you choose parts or send updates. There is no background CAD polling.</p><button id="connect">Reconnect Onshape</button> <button id="stop">Stop local app</button></details>
+    <details><summary>Connection &amp; API use</summary><p id="usage"></p><p class="quiet">Onshape is contacted when you choose parts or send updates. There is no background CAD polling.</p><button id="connect">Reconnect Onshape</button> <button id="account-setup">Connection setup</button> <button id="stop">Stop local app</button></details>
   </div>
   <footer>Official, unmodified OrcaSlicer and Bambu Studio. No hosting subscription.</footer>
 </main></body></html>

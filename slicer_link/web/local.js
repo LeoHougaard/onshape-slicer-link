@@ -2,7 +2,24 @@
 const $ = id => document.getElementById(id);
 let token = sessionStorage.getItem("slicer-link-session") || "";
 let catalog = null, busy = false, documentContext = {};
+let setupFinished = false, editingSetup = false, wizardStep = null;
 const selected = () => [...document.querySelectorAll("#links input:checked")].map(el => el.value);
+function showSetup() {
+  const guided = !setupFinished || editingSetup;
+  $("setup-progress").hidden = !guided;
+  $("setup-progress").textContent = `Step ${wizardStep} of 3`;
+  $("setup-back").hidden = !guided || wizardStep === 1;
+  $("setup-back").disabled = busy;
+  $("change-setup").hidden = guided;
+  $("change-setup").disabled = busy;
+  $("slicer-step").hidden = !guided || wizardStep !== 1;
+  $("document-step").hidden = !guided || wizardStep !== 2;
+  $("parts-step").hidden = guided && wizardStep !== 3;
+  $("parts-heading").textContent = guided ? "Choose a part" : "Your linked parts";
+  $("add-parts-label").hidden = guided;
+  if (guided) $("add-parts-options").open = true;
+  $("daily-help").hidden = guided;
+}
 function notice(message = "") { $("notice").textContent = message; $("notice").hidden = !message; }
 function enable() {
   $("send").disabled = busy || !$("slicer").value || !selected().length;
@@ -10,6 +27,9 @@ function enable() {
   $("project").disabled = busy || !$("slicer").value || !documentContext.document_id;
   for (const id of ["slicer", "document", "studios", "choose", "add", "save-path", "browse-path", "stop"]) $(id).disabled = busy;
   $("choose").disabled = busy || !$("studios").value;
+  $("account-setup").disabled = busy;
+  $("slicer-next").disabled = busy || !$("slicer").value;
+  showSetup();
 }
 async function api(path, body, method = body === undefined ? "GET" : "POST") {
   const response = await fetch(path, {method, headers: {"Content-Type": "application/json", Authorization: `Bearer ${token}`},
@@ -33,6 +53,8 @@ async function state() {
   for (const slicer of local.slicers) $("slicer").append(new Option(slicer.name, slicer.id));
   if (local.slicers.some(s => s.id === choice)) $("slicer").value = choice;
   documentContext = local.context;
+  setupFinished = local.setup_complete;
+  if (wizardStep === null) wizardStep = !$("slicer").value ? 1 : local.context.document_id ? 3 : 2;
   $("project-name").textContent = local.project.path || "No saved project connected yet.";
   if (!$("studio-url").value && local.context.document_id) {
     const c = local.context;
@@ -68,6 +90,7 @@ async function state() {
 action("document", async () => {
   await api("/api/local/document", {url: $("studio-url").value.trim()});
   catalog = null; $("catalog").hidden = true; await state();
+  wizardStep = 3;
   if (documentContext.element_id) await chooseParts();
 });
 async function chooseParts() {
@@ -87,6 +110,12 @@ action("add", async () => {
 });
 action("save-path", async () => {
   await api("/api/local/slicer-path", {name: $("slicer-name").value, path: $("slicer-path").value.trim()}); await state();
+  const target = [...$("slicer").options].find(option => option.textContent === $("slicer-name").value);
+  if (target) {
+    $("slicer").value = target.value;
+    await api("/api/local/slicer", {id: target.value});
+    wizardStep = 2;
+  }
 });
 action("browse-path", async () => {
   const result = await api("/api/local/browse-slicer", {});
@@ -111,7 +140,12 @@ async function send(reopen) {
   if (result.opened) messages.push(`Sent ${result.opened} ${result.opened === 1 ? "part" : "parts"} to ${result.slicer}. Finish any import prompt in the slicer.`);
   if (result.reload.length) messages.push(`Use Reload from disk in ${result.slicer} for: ${result.reload.join(", ")}.`);
   if (result.uncertain.length) messages.push(`An earlier launch was interrupted. Check ${result.slicer} for ${result.uncertain.join(", ")}. If missing, use Open selected parts again below.`);
-  $("status").textContent = messages.join("\n"); await state();
+  $("status").textContent = messages.join("\n");
+  if (!result.uncertain.length) {
+    editingSetup = false;
+    $("add-parts-options").open = false;
+  }
+  await state();
 }
 action("send", () => send(false));
 action("reopen", () => send(true));
@@ -125,9 +159,22 @@ action("stop", async () => {
   await api("/api/local/stop", {}); $("app").hidden = true;
   $("connecting").hidden = false; $("connecting").textContent = "Slicer Link stopped. Open its desktop shortcut to start it again.";
 });
+action("account-setup", async () => {
+  await api("/api/local/setup", {});
+  $("app").hidden = true;
+  $("connecting").hidden = false;
+  $("connecting").textContent = "Continue in the connection setup window. You can close this tab.";
+});
+$("setup-back").onclick = () => { if (!busy) { wizardStep = Math.max(1, wizardStep - 1); enable(); } };
+$("slicer-next").onclick = () => { if (!busy && $("slicer").value) { wizardStep = 2; enable(); } };
+$("change-setup").onclick = () => { if (!busy) { editingSetup = true; wizardStep = 1; enable(); } };
 $("slicer").onchange = async () => {
+  if (busy || !$("slicer").value) return;
+  busy = true; notice();
   enable();
-  if ($("slicer").value) try { await api("/api/local/slicer", {id: $("slicer").value}); await state(); } catch (error) { notice(error.message); }
+  try { await api("/api/local/slicer", {id: $("slicer").value}); await state(); wizardStep = 2; }
+  catch (error) { notice(error.message); }
+  finally { busy = false; enable(); }
 };
 (async () => {
   const hash = new URLSearchParams(location.hash.slice(1));

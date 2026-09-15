@@ -102,6 +102,7 @@ def create_local_app(
             "slicer": choice.get("id", ""),
             "context": context,
             "project": project,
+            "setup_complete": bool(store.get("local-onboarding", owner)),
         }
 
     @app.post("/api/local/slicer-path")
@@ -150,7 +151,11 @@ def create_local_app(
 
     @app.post("/api/local/send")
     def send(body: Send, request: Request):
-        return sync.send(account(request), body.slicer, body.links, body.request_id, reopen=body.reopen)
+        owner = account(request)
+        result = sync.send(owner, body.slicer, body.links, body.request_id, reopen=body.reopen)
+        if result["status"] == "ready" and not result["uncertain"]:
+            store.put("local-onboarding", owner, owner, {"complete": True})
+        return result
 
     @app.post("/api/local/stop")
     def shutdown(request: Request):
@@ -158,15 +163,30 @@ def create_local_app(
         stop()
         return {"ok": True}
 
-    @app.post("/api/local/open")
-    def open_existing(request: Request):
+    def launcher(request):
         # Only the native launcher has this secret. A web page cannot request
         # a new authenticated window by visiting the loopback server.
         if not control_token or not secrets.compare_digest(
             request.headers.get("authorization", ""), "Bearer " + control_token
         ):
             raise HTTPException(401, "Use the desktop shortcut to open Slicer Link.")
+
+    @app.post("/api/local/open")
+    def open_existing(request: Request):
+        launcher(request)
         reopen()
+        return {"ok": True}
+
+    @app.post("/api/local/exit")
+    def exit_for_setup(request: Request):
+        launcher(request)
+        stop()
+        return {"ok": True}
+
+    @app.post("/api/local/setup")
+    def connection_setup(request: Request):
+        account(request)
+        platforms.launch(platforms.local_command() + ["--setup"])
         return {"ok": True}
 
     return app

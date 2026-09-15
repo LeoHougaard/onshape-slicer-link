@@ -14,8 +14,8 @@ uv run --extra dev --extra browser pytest tests/stock -q
 uv run python -m slicer_link.local
 ```
 
-The first launch shows the same Onshape connection window as the installer.
-Create your own read-only Connected Desktop App using the setup guide. Never
+The first launch opens the graphical connection wizard. Follow it to create
+your own read-only Connected Desktop App. Never
 copy another user's credentials, browser profile, or local application data.
 
 On Windows, **Start Slicer Link.cmd** opens an existing per-user installation,
@@ -55,8 +55,8 @@ help links usable outside the source tree.
    automatically generated **Source code** archives are not installers.
 
 The `local-bridge-v0.2.0` tag preserves the earlier baseline. The
-`local-bridge-v0.2.0-test` release packages the same local workflow with the
-beginner guide. The embedded development code is also on `main`, but is not
+`v0.3.0-test` release adds guided setup to the local workflow.
+The embedded development code is also on `main`, but is not
 included in the installer; see [preview setup and limitations](embedded-setup.md).
 
 ## Historical experiments

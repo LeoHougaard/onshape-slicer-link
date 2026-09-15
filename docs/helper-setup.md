@@ -1,320 +1,38 @@
-# Set up Onshape Slicer Link
+# Get started
 
-This guide installs the local Windows app. It opens a browser tab beside Onshape
-and sends parts to your installed OrcaSlicer or Bambu Studio. Your slicer stays
-unmodified. The version that puts the slicer inside Onshape is a separate
-preview and does not yet have a beginner installer.
+## Windows
 
-Using Arch or another Linux desktop? Start with the
-[Linux instructions below](#arch-linux-and-other-linux-desktops), then return
-to step 2 to connect Onshape.
+1. [Download the installer](https://github.com/LeoHougaard/onshape-slicer-link/releases/download/v0.3.0-test/OnshapeSlicerLink-Setup-x86_64.exe) and open it.
+2. Open **Onshape Slicer Link** from Start.
+3. Follow the wizard. It opens Onshape and gives you copy buttons for the required fields.
 
-Already connected? Jump to [send your first part](#3-send-your-first-part),
-[update a part](#update-a-part), or [troubleshooting](#if-something-does-not-work).
-
-## Before you start
-
-You need:
-
-- A Windows PC with a 64-bit Intel or AMD processor.
-- Your own Onshape account and an internet connection.
-- OrcaSlicer or Bambu Studio, installed and opened at least once. Finish its
-  printer setup before continuing. Use the official
-  [OrcaSlicer download](https://github.com/OrcaSlicer/OrcaSlicer/releases/latest)
-  or [Bambu Studio download](https://bambulab.com/en/download/studio).
-- An Onshape document containing a solid part. Start with a simple test model.
-
-No Python, command line, paid hosting, or BIOS changes are needed for this
-Windows installer. You do not need a connected printer to try sending a part.
-
-## 1. Install and open Slicer Link
-
-1. Open the [Windows test release](https://github.com/LeoHougaard/onshape-slicer-link/releases/tag/local-bridge-v0.2.0-test).
-2. Under **Assets**, click **OnshapeSlicerLink-Setup-x86_64.exe**. The files named
-   **Source code** are for developers; they are not the installer.
-3. Open the downloaded file from your browser's downloads or your Downloads
-   folder. Follow the installer and keep the default installation folder.
-4. Finish with **Open local Slicer Link** selected. Later, open the Windows Start
-   menu, type **Onshape Slicer Link**, and open the app.
-
-On a new computer, a window titled **Connect local Slicer Link** appears.
-Continue below. If the Slicer Link browser page opens instead, this computer
-already has a connection and you can skip to step 3.
-
-## 2. Connect your own Onshape account
-
-This is a one-time setup. Onshape calls the connection an "OAuth application."
-You will copy its **Client ID** and **Client secret** into Slicer Link. These
-are generated connection details, not your Onshape password.
-
-### Create the connection in Onshape
-
-1. Leave the Slicer Link setup window open. Click **Open Onshape Developer settings**
-   and sign in to your own account.
-2. In Onshape, open your account icon at the top right, choose **My account**,
-   then **Developer** on the left.
-3. Open **OAuth applications** and click **Create new OAuth application**.
-4. Fill in the form using this table.
-
-| Onshape field | What to enter |
-| --- | --- |
-| Name | `My Slicer Link` |
-| Primary format | A unique identifier, such as `com.onshapeslicerlink.local.alex123`. Replace `alex123` with your own name and a few digits. |
-| Summary | `Send my Onshape parts to my local slicer.` |
-| Type | **Connected Desktop App** |
-| Redirect URLs | `http://localhost:8767/auth/callback` |
-| OAuth URL | Leave blank for this local setup. |
-| Permissions | Check only **Application can read your documents**, also called **OAuth2Read**. Leave the other permissions unchecked. |
-
-5. Click **Create application**. Keep the window showing the secret open.
-
-Copy the redirect address exactly, including `http`, `8767`, and
-`/auth/callback`. It points back to the app on your computer. These fields and
-the desktop localhost exception are documented in
-[Onshape's account setup help](https://cad.onshape.com/help/Content/Plans/my_account_developer.htm).
-This local app does not require an Onshape App Store entry.
-
-### Copy the two values and sign in
-
-1. Copy the newly generated **OAuth secret key** into **Client secret** in the
-   Slicer Link setup window. Onshape shows this secret only once.
-2. In Onshape, open your application's **Keys and secret** tab. Copy its
-   **OAuth client identifier key** into **Client ID** in Slicer Link.
-3. In Slicer Link, click **Save and sign in**.
-4. In the browser, check that you are signed into the intended Onshape account
-   and approve the request to read your documents.
-
-You should now see the Slicer Link page with **Your slicer** and
-**Your Onshape document**. Windows stores the connection in its password store.
-Keep the client secret private. Each user creates their own connection.
-
-If you closed the secret before copying it, Onshape can generate a replacement
-from **Keys and secret**. Do that before clicking **Save and sign in**.
-
-## 3. Send your first part
-
-1. In Slicer Link, choose OrcaSlicer or Bambu Studio under **Send parts to**.
-   For this first test, keep one window of that slicer open with an empty
-   project. Save any work before closing extra windows.
-2. In Onshape, open your document and its Part Studio. A Part Studio is the tab
-   where you create the parts. Use the editable workspace, not a saved version.
-3. Copy the full address from the browser's address bar. Paste it into
-   **Onshape document link** in Slicer Link and click **Connect document**.
-4. Check the document name. If needed, select the correct **Part Studio** and
-   click **Choose parts**.
-5. In **Solid part**, choose a part, then click **Link part**. Its name appears
-   in the linked-parts list with a checked box.
-6. Click **Send / Update**. Switch to your slicer and finish any import prompt.
-
-The part should appear on a plate. Arrange it and choose print settings normally.
-Slicer Link does not slice or start a print.
-
-To add more parts, repeat the selection and **Link part** step. You can select
-another Part Studio in the same document. Check the boxes for the parts you
-want to send, then click **Send / Update**.
-
-If your slicer is missing, open **Can't find your slicer?**, choose its name
-under **Application**, and click **Browse...**. Select the installed
-`orca-slicer.exe` or `bambu-studio.exe`, then click **Use this slicer**. Select
-the application file, not a shortcut or folder.
-
-## Update a part
-
-1. Finish your edit in Onshape and let the part finish rebuilding.
-2. In Slicer Link, leave the parts you want to update checked and click
-   **Send / Update**. Wait for the message asking you to reload them.
-3. In OrcaSlicer or Bambu Studio, open **Prepare**. Select the existing object
-   in the object list, right-click it, and choose **Reload from disk**.
-   Some OrcaSlicer versions also provide **Reload All**.
-4. Check the changed shape before slicing or printing.
-
-Select the object itself, not empty plate space or a print-setting entry. For
-several objects, select their rows together with Ctrl-click before reloading.
-Check every affected plate; reloading one selected object may leave others
-unchanged.
-
-Slicer Link saves the replacement geometry automatically. Repeating
-**Send / Update** does not import another copy. Reloading is still manual, and
-the app cannot confirm that you performed it.
-
-Native reload retained placement and ordinary object settings in the tested
-examples, but geometry can recenter when its bounds change. Check alignment,
-supports, and painted settings after changing geometry. Full preservation for
-every project is not established by this test release.
-
-## Save your project and keep the link
-
-1. In the slicer, use **File > Save Project as** to save a project ending in
-   `.3mf`. A project saves your objects and print settings together.
-2. In Slicer Link, expand **Keep the link after reopening a saved project**.
-3. Click **Connect saved project** and select that `.3mf` file.
-4. Click **Send / Update** once to prepare the files beside your project.
-
-Next time, open the saved `.3mf` in the slicer and open Slicer Link from the
-Start menu. Use the same update and reload steps above.
-
-Keep the model files Slicer Link creates beside the project. The slicer needs
-them for reloading. If you move the project, use **Connect saved project** at
-its new location and **Send / Update** again. Test a reload after reopening.
-Only one project per Onshape document, workspace, and slicer can be connected
-at a time. A project file alone does not transfer the connection to another PC.
-
-## Everyday questions
-
-**Do I save exported files myself?** No. Slicer Link manages the STL model files.
-They remain on disk because stock slicers use them to reload geometry. You only
-choose where to save your slicer project.
-
-**What if no slicer is open?** Sending a new part starts the selected slicer.
-For a part you sent before, open its project first and reload it after updating.
-
-**What if both slicers are open?** **Send parts to** chooses the application.
-If several windows of that application are open, the slicer decides where to
-import. This version cannot target a particular window or plate.
-
-**How do I put a linked part into a new project?** Expand **Start a new project
-or reopen missing parts** and click **Open selected parts again**. Use this
-only when the part is missing; it intentionally imports another copy.
-
-**Can I update my slicer normally?** Yes. This version uses your installed,
-unmodified slicer. If its location changes, choose it again in Slicer Link.
-
-**How do I close Slicer Link?** Expand **Connection & API use** and click
-**Stop local app**. Closing its browser tab alone leaves the app running.
-The Start menu shortcut opens it again.
-
-**Does it cost anything?** Slicer Link needs no paid hosting or subscription.
-It uses Onshape's API, the connection that reads your CAD data. Onshape currently
-lists 2,500 annual calls for a Free account. Successful calls through your
-private connection count against its owner's allowance. Check **My account >
-Developer** for your usage. The local app makes no background CAD checks and
-reuses cached exports. See [Onshape's API limits](https://onshape-public.github.io/docs/auth/limits/),
-checked September 14, 2026. Making this GitHub repository public does not make it
-a public Onshape App Store application or change those limits.
-
-## If something does not work
-
-| What you see | What to do |
-| --- | --- |
-| Windows blocks or questions the installer | This test installer is unsigned. Check that it came from this project's release page. If you cannot open it, report the exact Windows message; do not disable antivirus protection. |
-| No Developer page or option to create an application | Check that you opened **My account**, not document settings. Company-managed accounts may need their administrator's help. Report the missing option if using a personal account. |
-| Onshape rejects the redirect address | Check the type is **Connected Desktop App** and the redirect is exactly `http://localhost:8767/auth/callback`. Reopen Slicer Link from Start. |
-| Sign-in fails after saving the client details | Recheck the Onshape application and read permission. If you pasted the wrong Client ID or secret, report the error for help resetting the connection. There is no reset button yet. Do not share the secret. |
-| A reconnect window is blocked | Allow the sign-in popup for the local Slicer Link page, then click **Reconnect Onshape** under **Connection & API use**. |
-| The local page cannot be reached, or its session expired | Open **Onshape Slicer Link** from Start. A bookmarked address does not start the app or restore its session. |
-| No parts are listed | Open a Part Studio containing a solid part. An assembly, sketch, or surface alone is not supported. Choose the studio and click **Choose parts** again. |
-| A document link is rejected | Copy the address from an editable workspace you can access in Onshape. Saved-version links are not supported by this update flow. |
-| **Send / Update** is unavailable | Choose a slicer, link a part, and check its box. |
-| Sending finishes but the shape is unchanged | Wait for the send to finish, then **Reload from disk** on the existing object. Confirm you edited the linked document and Part Studio. |
-| **Reload from disk** is missing or disabled | In **Prepare**, right-click the top-level object row in the object list. Try one linked solid object first. The command needs an object with a source file. |
-| The slicer asks where a source file went | Reconnect the saved `.3mf` with **Connect saved project**, then **Send / Update**. If the slicer still asks, locate the matching `.stl` beside the project. Keep these files with the project. |
-| A part never opened, or you removed it | Check for a slicer import prompt. If the object is absent, use **Open selected parts again** once. |
-| An API limit error appears | For 429, wait before retrying. For 402, check annual usage in Onshape. Repeated sends will not restore an exhausted allowance. |
-
-Still stuck? [Report a problem](https://github.com/LeoHougaard/onshape-slicer-link/issues).
-Include your Windows version, slicer name and version, the step above, and the
-error message. Crop private documents and account details out of screenshots.
-Never post passwords, client secrets, or browser sign-in links.
-
-## Where your data lives
-
-The Windows app keeps settings, logs, and managed models in
-`%LOCALAPPDATA%\OnshapeSlicerLink\local`. Paste that address into File Explorer's
-address bar to open it. `app.log` is the local error log. Inspect it for private
-paths or document details before sharing excerpts.
-
-Install future updates over the existing application and keep this data folder.
-Deleting it can break source links. Save your slicer projects and their adjacent
-model files when backing up; copying those files does not copy your Onshape login.
+Have your normal OrcaSlicer or Bambu Studio installed first. Each person uses
+their own Onshape account. You do not need Python, a server, or a terminal.
 
 ## Arch Linux and other Linux desktops
 
-The release includes an experimental Linux x86-64 package. It was built on
-Ubuntu 22.04, but installation, sign-in, and slicer operation have not been
-tested on Linux, including Arch. You can try it and report the result.
-It is the local app, not the embedded preview. No WSL or Docker is needed.
+Linux x86-64 is available for testing. It has not been tested on Linux or Arch.
 
-### Prepare your desktop
-
-Open your normal OrcaSlicer or Bambu Studio and finish its setup first. Keep
-using the official slicer; Slicer Link does not replace it.
-
-Slicer Link also needs a desktop password store to save the Onshape connection.
-GNOME Keyring provides one through Secret Service. A configured KWallet may
-also work; compatibility with this package has not been verified.
-
-On Arch, if you do not already have a working password store, install GNOME
-Keyring and its password manager through your package manager:
-
-```sh
-sudo pacman -Syu --needed gnome-keyring seahorse
-```
-
-This command updates your Arch system as well as installing those packages.
-Review the package manager's confirmation before proceeding. Open **Passwords
-and Keys**, also called **Seahorse**, and create or unlock a password keyring.
-Use a password for the keyring. See the
-[ArchWiki keyring guide](https://wiki.archlinux.org/title/GNOME/Keyring) for
-desktop-specific startup help. Minimal window-manager sessions may need extra
-configuration; installing the packages alone does not establish that the
-password store is running and unlocked.
-
-If your slicer is an AppImage, allow it to run as a program in its file
-properties. If it reports a FUSE error on Arch, install `fuse2` through your
-package manager. See the official
-[AppImage FUSE instructions](https://docs.appimage.org/user-guide/troubleshooting/fuse.html#setting-up-fuse-on-arch-linux).
-Slicer Link itself is not an AppImage and does not require FUSE.
-
-### Install Slicer Link
-
-1. Open the [test release](https://github.com/LeoHougaard/onshape-slicer-link/releases/tag/local-bridge-v0.2.0-test).
-   Under **Assets**, download **onshape-slicer-link-linux-x86_64.tar.gz**.
-2. Extract the archive with your file manager. Open the extracted
-   **OnshapeSlicerLink** folder in a terminal.
-3. Run this command as your normal user, without `sudo`:
+1. [Download the Linux archive](https://github.com/LeoHougaard/onshape-slicer-link/releases/download/v0.3.0-test/onshape-slicer-link-linux-x86_64.tar.gz) and extract it.
+2. Open the extracted **OnshapeSlicerLink** folder in a terminal and run:
 
    ```sh
    bash install.sh
    ```
 
-4. Keep the terminal open while using the app. Its first connection window
-   should appear. Follow [step 2 above](#2-connect-your-own-onshape-account)
-   to connect your own Onshape account, then send a part.
+3. Follow the graphical wizard. Later, open **Onshape Slicer Link** from your application menu.
 
-If you prefer to extract from the terminal and downloaded into `Downloads`,
-these commands perform steps 2 and 3:
+Run the installer as your normal user, without `sudo`. Keep the initial terminal
+open until you stop the app. An unlocked desktop password store is required.
+[Arch password-store help](https://github.com/LeoHougaard/onshape-slicer-link/blob/main/docs/troubleshooting.md#arch-password-store).
 
-```sh
-cd ~/Downloads
-tar -xzf onshape-slicer-link-linux-x86_64.tar.gz
-cd OnshapeSlicerLink
-bash install.sh
-```
+## Next time
 
-The installer copies the app into your user folder. It does not create an
-application-menu shortcut. To reopen Slicer Link, run:
+Open Slicer Link normally. It remembers your connection and goes straight to your parts.
 
-```sh
-~/.local/share/onshape-slicer-link/OnshapeSlicerLink
-```
+To choose a different slicer or document, click **Change slicer or document**.
+To correct Onshape client details, use **Connection setup** under **Connection & API use**.
+On Windows you can also open **Slicer Link connection setup** from Start.
 
-If you set `XDG_DATA_HOME`, use its `onshape-slicer-link/OnshapeSlicerLink` path
-instead. In **Can't find your slicer?**, use **Browse...** to select the
-executable or AppImage, then **Use this slicer**. Installed Flatpaks are also
-detected by the app, but that path remains untested.
-
-### If it does not open on Arch
-
-- A password-store error means the store is missing, unavailable, or locked.
-  Open Seahorse and unlock your keyring, then retry in the same desktop session.
-- A display error means the app cannot reach a graphical desktop. Launch it
-  from a terminal inside your normal desktop session, as your normal user.
-- For a missing library or other startup error, copy the terminal message into
-  a [GitHub issue](https://github.com/LeoHougaard/onshape-slicer-link/issues).
-  Include your desktop environment, whether you use X11 or Wayland, and which
-  slicer you chose. Do not include credentials or private CAD files.
-
-Linux data lives in `~/.config/onshape-slicer-link/local`, unless
-`XDG_CONFIG_HOME` is set. Stop the app with **Stop local app** before closing
-its terminal. The [first-test checklist](https://github.com/LeoHougaard/onshape-slicer-link/blob/main/docs/user-test.md)
-can guide your report. A successful package build is not a Linux test.
+[Everyday use](https://github.com/LeoHougaard/onshape-slicer-link/blob/main/docs/usage.md) ?
+[Something went wrong](https://github.com/LeoHougaard/onshape-slicer-link/blob/main/docs/troubleshooting.md)

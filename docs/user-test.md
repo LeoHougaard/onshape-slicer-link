@@ -3,7 +3,8 @@
 Use this checklist after the [setup guide](helper-setup.md). It covers the local
 Windows test release. Choose a simple test part; no printer is required.
 
-- [ ] Choose one slicer and open an empty project. Link one solid Onshape part
+- [ ] Follow the wizard to choose one slicer and link one solid Onshape part.
+  If already set up, use **Change slicer or document**. Open an empty slicer project
   and click **Send / Update**. The part appears without manually exporting or
   importing an STL.
 - [ ] Move and rotate the part in the slicer. Change a setting such as infill.

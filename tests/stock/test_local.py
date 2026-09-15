@@ -186,11 +186,18 @@ def test_local_browser_one_click_send_and_update(local, tmp_path):
             errors = []
             page.on("pageerror", lambda e: errors.append(str(e)))
             page.goto(origin)
+            playwright.expect(page.get_by_text("Step 1 of 3", exact=True)).to_be_visible()
+            assert not page.get_by_label("Onshape document link").is_visible()
             page.get_by_label("Send parts to").select_option(ORCA)
+            page.get_by_text("Step 2 of 3", exact=True).wait_for()
+            page.get_by_role("button", name="Back", exact=True).click()
+            assert page.get_by_label("Send parts to").input_value() == ORCA
+            page.get_by_role("button", name="Next", exact=True).click()
             page.get_by_label("Onshape document link").fill(
                 "https://cad.onshape.com/documents/" + "1" * 24 + "/w/" + "2" * 24 + "/e/" + "3" * 24
             )
             page.get_by_role("button", name="Connect document").click()
+            page.get_by_text("Step 3 of 3", exact=True).wait_for()
             page.get_by_role("button", name="Link part", exact=True).click()
             page.get_by_role("button", name="Send / Update", exact=True).click()
             playwright.expect(page.locator("#status")).to_contain_text("Sent 1 part to OrcaSlicer")
@@ -199,6 +206,9 @@ def test_local_browser_one_click_send_and_update(local, tmp_path):
             page.get_by_role("button", name="Send / Update", exact=True).click()
             playwright.expect(page.locator("#status")).to_contain_text("Reload from disk in OrcaSlicer")
             assert len(launches) == 1
+            page.reload()
+            playwright.expect(page.get_by_role("button", name="Change slicer or document")).to_be_visible()
+            assert not page.locator("#setup-progress").is_visible()
             assert page.get_by_role("button", name="Save STL files locally").count() == 0
             page.screenshot(path=str(tmp_path / "local-send.png"), full_page=True)
             assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
@@ -224,6 +234,39 @@ def test_document_connection_remembers_names_and_choice(local):
     restored = client.get("/api/local/state", headers=headers()).json()
     assert restored["context"] == doc and restored["slicer"] == BAMBU
     assert client.post("/api/local/studio", headers=headers(), json={"id": "4" * 24}).status_code == 400
+
+
+def test_setup_restart_requires_local_auth_and_exit_requires_native_control(local, monkeypatch):
+    from slicer_link import platforms
+
+    _client, sync, _launches = local
+    launches, stops = [], []
+    monkeypatch.setattr(platforms, "launch", launches.append)
+    app = create_local_app(
+        Settings("http://127.0.0.1:8767", str(sync.store.root), "unused", development=True),
+        sync.store,
+        sync.auth,
+        sync.root,
+        sync=sync,
+        control_token="test-native-control",
+        stop=lambda: stops.append(True),
+    )
+    with TestClient(app, base_url="http://127.0.0.1:8767") as client:
+        assert client.post("/api/local/setup").status_code == 401
+        hostile = {**headers(), "Origin": "https://evil.example"}
+        assert client.post("/api/local/setup", headers=hostile).status_code == 403
+        assert not launches
+        assert client.post("/api/local/setup", headers=headers()).status_code == 200
+        assert launches == [platforms.local_command() + ["--setup"]]
+        assert client.post("/api/local/exit", headers=headers()).status_code == 401
+        native = {"Authorization": "Bearer test-native-control"}
+        assert (
+            client.post("/api/local/exit", headers={**native, "Origin": "https://evil.example"}).status_code
+            == 403
+        )
+        assert not stops
+        assert client.post("/api/local/exit", headers=native).status_code == 200
+        assert stops == [True]
 
 
 def test_saved_project_sources_update_without_rewriting_project(local, tmp_path):
