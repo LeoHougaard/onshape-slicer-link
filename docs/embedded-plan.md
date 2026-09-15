@@ -8,8 +8,8 @@ requirements. A rendered desktop or source-file refresh alone is not completion.
 The previous working implementation is preserved on GitHub at tag
 `local-bridge-v0.2.0`, commit `9a3d865`. The repository was private at that checkpoint. Current
 credentials were checked against all 122 tracked and pending source files before
-the checkpoint push; none matched. Work continues on
-`feature/embedded-stock-slicer`.
+the checkpoint push; none matched. The embedded development work has since
+been merged into `main`.
 
 ## Plan and verification
 

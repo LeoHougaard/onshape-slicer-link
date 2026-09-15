@@ -29,7 +29,7 @@ Windows installer. You do not need a connected printer to try sending a part.
 
 ## 1. Install and open Slicer Link
 
-1. Open the [Windows test release](https://github.com/LeoHougaard/onshape-slicer-link/releases/tag/local-bridge-v0.2.0-friends).
+1. Open the [Windows test release](https://github.com/LeoHougaard/onshape-slicer-link/releases/tag/local-bridge-v0.2.0-test).
 2. Under **Assets**, click **OnshapeSlicerLink-Setup-x86_64.exe**. The files named
    **Source code** are for developers; they are not the installer.
 3. Open the downloaded file from your browser's downloads or your Downloads
@@ -86,7 +86,7 @@ This local app does not require an Onshape App Store entry.
 
 You should now see the Slicer Link page with **Your slicer** and
 **Your Onshape document**. Windows stores the connection in its password store.
-Keep the client secret private. Each friend creates their own connection.
+Keep the client secret private. Each user creates their own connection.
 
 If you closed the secret before copying it, Onshape can generate a replacement
 from **Keys and secret**. Do that before clicking **Save and sign in**.
@@ -231,7 +231,7 @@ model files when backing up; copying those files does not copy your Onshape logi
 
 The release includes an experimental Linux x86-64 package. It was built on
 Ubuntu 22.04, but installation, sign-in, and slicer operation have not been
-tested on Linux, including Arch. Your friend can try it and report the result.
+tested on Linux, including Arch. You can try it and report the result.
 It is the local app, not the embedded preview. No WSL or Docker is needed.
 
 ### Prepare your desktop
@@ -267,7 +267,7 @@ Slicer Link itself is not an AppImage and does not require FUSE.
 
 ### Install Slicer Link
 
-1. Open the [test release](https://github.com/LeoHougaard/onshape-slicer-link/releases/tag/local-bridge-v0.2.0-friends).
+1. Open the [test release](https://github.com/LeoHougaard/onshape-slicer-link/releases/tag/local-bridge-v0.2.0-test).
    Under **Assets**, download **onshape-slicer-link-linux-x86_64.tar.gz**.
 2. Extract the archive with your file manager. Open the extracted
    **OnshapeSlicerLink** folder in a terminal.
@@ -317,4 +317,4 @@ detected by the app, but that path remains untested.
 Linux data lives in `~/.config/onshape-slicer-link/local`, unless
 `XDG_CONFIG_HOME` is set. Stop the app with **Stop local app** before closing
 its terminal. The [first-test checklist](https://github.com/LeoHougaard/onshape-slicer-link/blob/main/docs/user-test.md)
-can guide your friend's report. A successful package build is not a Linux test.
+can guide your report. A successful package build is not a Linux test.

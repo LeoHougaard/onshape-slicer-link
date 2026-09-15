@@ -6,7 +6,7 @@ using your slicer to arrange, slice, and print, and update it normally.
 
 ## Start here
 
-**[Download the Windows installer](https://github.com/LeoHougaard/onshape-slicer-link/releases/tag/local-bridge-v0.2.0-friends)**
+**[Download the Windows installer](https://github.com/LeoHougaard/onshape-slicer-link/releases/tag/local-bridge-v0.2.0-test)**
 
 [Linux x86-64 test download and Arch instructions](docs/helper-setup.md#arch-linux-and-other-linux-desktops)
 
@@ -40,7 +40,7 @@ See [everyday use and reloading](docs/helper-setup.md#update-a-part),
 
 There are two versions of the project. The download above is the local app.
 
-| Version | Where it opens | Ready for friends to install? |
+| Version | Where it opens | Ready to install? |
 | --- | --- | --- |
 | Local app | A separate browser tab and your installed slicer | Windows test installer available; follow the setup guide |
 | Embedded preview | The complete stock slicer inside an Onshape tab | Needs developer preparation; no end-user installer yet |
@@ -49,7 +49,7 @@ The embedded preview has displayed both slicers in Onshape and imported real CAD
 parts. The complete one-click update flow and easy installation are unfinished.
 [Read about trying the preview](docs/embedded-setup.md).
 
-An experimental Linux x86-64 package is also available for friends to test,
+An experimental Linux x86-64 package is also available for testing,
 including Arch users. Linux installation and execution remain untested.
 macOS and ARM are not supported targets.
 

@@ -53,10 +53,9 @@ workflow, not a working update button in the preview.
 
 ## For the maintainer
 
-The preview is on
-[`feature/embedded-stock-slicer`](https://github.com/LeoHougaard/onshape-slicer-link/tree/feature/embedded-stock-slicer).
-Read the [runtime verification record](https://github.com/LeoHougaard/onshape-slicer-link/blob/feature/embedded-stock-slicer/docs/embedded-runtime-verification.md)
-and [implementation plan](https://github.com/LeoHougaard/onshape-slicer-link/blob/feature/embedded-stock-slicer/docs/embedded-plan.md)
+The preview source is included on `main`.
+Read the [runtime verification record](embedded-runtime-verification.md)
+and [implementation plan](embedded-plan.md)
 before offering a test session.
 
 The Windows experiment uses a dedicated WSL2 distribution called
@@ -70,7 +69,7 @@ dependencies, a private Onshape Element tab extension pointing to
 `http://localhost:8768/`, and the account's private App Store subscription.
 Keep credentials and runtime data on the local computer.
 
-After those prerequisites are in place, run from the feature-branch checkout:
+After those prerequisites are in place, run from your `main` checkout:
 
 ```powershell
 uv sync --locked --extra embedded-dev

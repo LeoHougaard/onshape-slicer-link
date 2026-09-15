@@ -55,9 +55,9 @@ help links usable outside the source tree.
    automatically generated **Source code** archives are not installers.
 
 The `local-bridge-v0.2.0` tag preserves the earlier baseline. The
-`local-bridge-v0.2.0-friends` release packages the same local workflow with the
-beginner guide. Development of the embedded version remains on its feature
-branch; see [preview setup and limitations](embedded-setup.md).
+`local-bridge-v0.2.0-test` release packages the same local workflow with the
+beginner guide. The embedded development code is also on `main`, but is not
+included in the installer; see [preview setup and limitations](embedded-setup.md).
 
 ## Historical experiments
 
