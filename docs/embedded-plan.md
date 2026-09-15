@@ -6,7 +6,7 @@ the completion gate. Free/local operation and unmodified slicer releases remain
 requirements. A rendered desktop or source-file refresh alone is not completion.
 
 The previous working implementation is preserved on GitHub at tag
-`local-bridge-v0.2.0`, commit `9a3d865`. The repository is private. Current
+`local-bridge-v0.2.0`, commit `9a3d865`. The repository was private at that checkpoint. Current
 credentials were checked against all 122 tracked and pending source files before
 the checkpoint push; none matched. Work continues on
 `feature/embedded-stock-slicer`.

@@ -49,8 +49,9 @@ test connection.
    be run unchanged against the current connection.
 6. For full workflow tests, inspect both the actual Onshape UI and disposable
    stock slicer projects. Keep existing user slicer windows outside automation.
-   The embedded slicer environment remains a prototype proposal, not a working
-   component of this access setup.
+   The separate embedded prototype now has
+   [desktop and import verification](embedded-runtime-verification.md).
+   Its end-user setup and complete update flow are still unfinished.
 
 ## Credential recovery
 
