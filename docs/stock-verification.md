@@ -1,5 +1,11 @@
 # Stock application verification
 
+Version 0.3.1 explains rejected key input, adds replacement Paste buttons and
+secret recovery help, and keeps navigation visible at 100% and 150% scaling.
+All 66 Windows tests passed. Real mouse clicks on Paste and Next reached the
+client ID screen using disposable credentials. The user's new Onshape grant
+was not submitted. Linux execution remains untested.
+
 Version 0.3.0 adds the native connection wizard and guided slicer/document/part
 selection. All 54 Windows tests passed, including Back/Cancel, secret-store
 failure recovery, connection restart authorization, and remembered setup.

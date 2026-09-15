@@ -81,8 +81,11 @@ def create_local_app(
 
     def callback(request):
         values = request.query_params
-        require(len(values.get("state", "")) <= 256, "Invalid sign-in state.")
-        code, nonce = auth.complete(values.get("state", ""), values.get("code", ""))
+        try:
+            require(len(values.get("state", "")) <= 256, "Invalid sign-in state.")
+            code, nonce = auth.complete(values.get("state", ""), values.get("code", ""))
+        except LinkError:
+            return FileResponse(WEB / "connection-help.html", status_code=400)
         pending = store.get("login", digest(code.encode()))
         connected(pending["owner"])
         return RedirectResponse(settings.origin + "/#" + urlencode({"local-code": code, "nonce": nonce}))

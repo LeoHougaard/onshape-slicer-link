@@ -236,6 +236,21 @@ def test_document_connection_remembers_names_and_choice(local):
     assert client.post("/api/local/studio", headers=headers(), json={"id": "4" * 24}).status_code == 400
 
 
+def test_failed_signin_shows_recovery_without_echoing_oauth_values(local, monkeypatch):
+    client, sync, _ = local
+
+    def fail(*args):
+        raise LinkError("private-error-content")
+
+    monkeypatch.setattr(sync.auth, "complete", fail, raising=False)
+    result = client.get("/auth/callback?state=private-state&code=private-code")
+    assert result.status_code == 400
+    assert result.headers["content-type"].startswith("text/html")
+    assert "Slicer Link connection setup" in result.text
+    assert "private-" not in result.text
+    assert result.headers["cache-control"] == "no-store"
+
+
 def test_setup_restart_requires_local_auth_and_exit_requires_native_control(local, monkeypatch):
     from slicer_link import platforms
 

@@ -6,6 +6,8 @@
 | I cannot find Developer in Onshape | Open your account icon, then **My account > Developer**. A managed account may require administrator help. |
 | Onshape rejects the redirect address | Use **Connected Desktop App** and copy the redirect using the wizard's button. |
 | I copied the wrong client details | Open **Slicer Link connection setup** from Windows Start. On Linux, use the application's **Connection setup** menu action. If the app is already connected, the same option is under **Connection & API use**. |
+| Next does not advance after pasting a key | Read the message above Next. Copy just the key value from Onshape, then use **Paste** in the wizard to replace the field. **Show secret** lets you check for extra text. Use **OAuth applications**, not **API keys**. |
+| I closed the secret popup | Click **I closed the popup or can't find the secret** in the wizard for recovery instructions. |
 | The local page will not open | Start **Onshape Slicer Link** from your application menu. A browser bookmark does not start the app. |
 | My slicer is missing | Open **Can't find your slicer?**, choose its name, browse to its installed executable or AppImage, then **Use this slicer**. |
 | No parts appear | Choose an editable Part Studio containing a solid part. Assemblies, sketches, surfaces, and saved-version links are not supported by this flow. |

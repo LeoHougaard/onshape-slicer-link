@@ -3,7 +3,7 @@
 import secrets
 import tkinter as tk
 import webbrowser
-from tkinter import ttk
+from tkinter import messagebox, ttk
 
 from cryptography.fernet import Fernet
 
@@ -11,6 +11,7 @@ from .model import LinkError
 
 SETTINGS_URL = "https://cad.onshape.com/user/settings"
 REDIRECT = "http://localhost:8767/auth/callback"
+HELP_URL = "https://cad.onshape.com/help/Content/Plans/my_account_developer.htm"
 
 
 class SetupWizard:
@@ -24,8 +25,11 @@ class SetupWizard:
         self.client_secret = tk.StringVar(root, self.existing.get("client_secret", ""))
         self.message = tk.StringVar(root)
         root.title("Set up Slicer Link")
-        root.geometry("620x560")
-        root.minsize(570, 490)
+        scale = max(1, float(root.tk.call("tk", "scaling")) / (96 / 72))
+        size = round(650 * scale)
+        self.wraplength = round(510 * scale)
+        root.geometry(f"{size}x{size}")
+        root.minsize(size, size)
         root.protocol("WM_DELETE_WINDOW", root.destroy)
         frame = ttk.Frame(root, padding=28)
         frame.pack(fill="both", expand=True)
@@ -34,18 +38,23 @@ class SetupWizard:
         self.heading = ttk.Label(frame, font=("Segoe UI", 20, "bold"))
         self.heading.pack(anchor="w", pady=(0, 16))
         self.content = ttk.Frame(frame)
-        self.content.pack(fill="both", expand=True)
-        ttk.Label(frame, textvariable=self.message, wraplength=510).pack(fill="x", pady=12)
         navigation = ttk.Frame(frame)
-        navigation.pack(fill="x")
+        navigation.pack(side="bottom", fill="x")
+        ttk.Label(frame, textvariable=self.message, wraplength=self.wraplength).pack(
+            side="bottom", fill="x", pady=12
+        )
+        self.content.pack(fill="both", expand=True)
         self.back = ttk.Button(navigation, text="Back", command=self.previous)
         self.back.pack(side="left")
         self.next = ttk.Button(navigation, command=self.advance)
         self.next.pack(side="right")
+        ttk.Button(
+            navigation, text="Onshape's illustrated guide", command=lambda: self.open_url(HELP_URL)
+        ).pack(side="left", padx=16)
         self.render()
 
     def text(self, value):
-        ttk.Label(self.content, text=value, wraplength=510, justify="left").pack(
+        ttk.Label(self.content, text=value, wraplength=self.wraplength, justify="left").pack(
             anchor="w", fill="x", pady=(0, 12)
         )
 
@@ -67,10 +76,47 @@ class SetupWizard:
 
     def input(self, label, variable, *, masked=False):
         ttk.Label(self.content, text=label).pack(anchor="w", pady=(4, 6))
-        entry = ttk.Entry(self.content, textvariable=variable, show="*" if masked else "")
-        entry.pack(fill="x")
+        row = ttk.Frame(self.content)
+        row.pack(fill="x", pady=(0, 10))
+        entry = ttk.Entry(row, textvariable=variable, show="*" if masked else "")
+        entry.pack(side="left", fill="x", expand=True, padx=(0, 8))
+        ttk.Button(row, text="Paste", command=lambda: self.paste(variable)).pack(side="right")
+        if masked:
+            visible = tk.BooleanVar(self.root)
+            ttk.Checkbutton(
+                self.content,
+                text="Show secret on this screen",
+                variable=visible,
+                command=lambda: entry.config(show="" if visible.get() else "*"),
+            ).pack(anchor="w", pady=(0, 12))
         entry.bind("<Return>", lambda _event: self.advance())
+        entry.selection_range(0, "end")
         entry.focus_set()
+
+    def paste(self, variable):
+        try:
+            value = self.root.clipboard_get().strip()
+        except tk.TclError:
+            self.message.set("Nothing to paste. Copy the key in Onshape first, then click Paste here.")
+            return
+        if not value:
+            self.message.set("Nothing to paste. Copy the key in Onshape first, then click Paste here.")
+            return
+        variable.set(value)
+        self.message.set("Pasted. Click Next to continue." if self.step == 3 else "Pasted. Ready to sign in.")
+
+    def secret_help(self):
+        messagebox.showinfo(
+            "Find your OAuth secret",
+            "In Onshape, click your account icon at the top right, then My account.\n\n"
+            "Choose Developer on the left, then OAuth applications. Open the connection you created "
+            "for Slicer Link, usually My Slicer Link, and select Keys and secret.\n\n"
+            "If you lost the secret, use the option there to regenerate it. This replaces the old secret "
+            "for this connection, so update any other Slicer Link installation using it too.\n\n"
+            "Copy the new OAuth secret key before closing Onshape's popup. Come back here and click Paste. "
+            "Use the client ID from this same connection on the next screen.",
+            parent=self.root,
+        )
 
     def render(self):
         for child in self.content.winfo_children():
@@ -86,41 +132,69 @@ class SetupWizard:
             "Finish connecting",
         )
         self.heading.config(text=titles[self.step])
-        self.next.config(text="Save and sign in" if self.step == 4 else "Next")
+        self.next.config(text="Save and open Onshape" if self.step == 4 else "Next")
         if self.step == 0:
-            self.text("Onshape needs a one-time connection. We'll walk through it together.")
+            self.text(
+                "You'll use two windows: Onshape in your browser and this setup wizard. Keep both open."
+            )
             ttk.Button(
                 self.content, text="Open Onshape settings", command=lambda: self.open_url(SETTINGS_URL)
             ).pack(anchor="w", pady=(0, 16))
-            self.text("Sign in, then choose Developer → OAuth applications → Create new OAuth application.")
-            self.text("When the form is open, click Next here.")
+            self.text("1. Open settings above and sign in to your Onshape account.")
+            self.text("2. Click Developer in the list on the left, then the OAuth applications tab.")
+            self.text("3. Click Create new OAuth application. Leave that form open and click Next here.")
+            self.text(
+                "Use OAuth applications, not the separate API keys tab. This wizard needs an OAuth client ID and secret."
+            )
             ttk.Button(self.content, text="I already have client details", command=self.use_existing).pack(
                 anchor="w"
             )
         elif self.step == 1:
-            self.text("Copy these into the matching fields in Onshape.")
+            self.text(
+                "For each field: click Copy here, click the matching box in Onshape, and press Ctrl+V to paste."
+            )
             self.copy_field("Name", "My Slicer Link")
             self.copy_field("Primary format", self.identifier)
             self.copy_field("Summary", "Send my Onshape parts to my slicer.")
+            self.text("Keep the Onshape form open. Click Next here to finish its settings.")
         elif self.step == 2:
-            self.text("Type: choose Connected Desktop App.")
+            self.text(
+                "In the same Onshape form, set Type to Connected Desktop App. This lets the connection run on your computer."
+            )
             self.copy_field("Redirect URLs", REDIRECT)
             self.text("Leave OAuth URL blank.")
             self.text("Under Permissions, check only Application can read your documents.")
-            self.text("Click Create application in Onshape, then Next here.")
+            self.text(
+                "Click Create application in Onshape. Keep the popup with the secret key open, then click Next here."
+            )
         elif self.step == 3:
             self.text(
-                "Keep your saved secret, or paste a replacement from Onshape."
+                "Your saved secret is filled in. Keep it, or click Paste to replace it with the OAuth secret from Onshape."
                 if self.existing.get("client_id")
-                else "Onshape shows an OAuth secret key once. Copy it here before closing that window."
+                else "In Onshape's popup, copy the value labelled OAuth secret key. Return here and click Paste below."
             )
-            self.input("Client secret", self.client_secret, masked=True)
-            self.text("This is the generated key, not your Onshape password.")
-        else:
-            self.text("In Onshape, open Keys and secret. Copy the OAuth client identifier key here.")
-            self.input("Client ID", self.client_id)
+            self.input("OAuth secret key / Client secret", self.client_secret, masked=True)
             self.text(
-                "Next, your browser will ask you to allow read access. Your connection stays on this computer."
+                "Onshape shows this secret only once. Copy the value itself, without its label. The other key, the client ID, goes on the next screen."
+            )
+            self.text("An API key or your Onshape password will not work here.")
+            ttk.Button(
+                self.content, text="I closed the popup or can't find the secret", command=self.secret_help
+            ).pack(anchor="w")
+        else:
+            self.text("1. Close the secret popup in Onshape after copying its value on the previous screen.")
+            self.text(
+                "2. Open your connection: My account > Developer > OAuth applications > My Slicer Link, or the name you chose."
+            )
+            self.text(
+                "3. Select Keys and secret. Copy the OAuth client identifier key, then click Paste here."
+            )
+            self.input("OAuth client identifier key / Client ID", self.client_id)
+            self.text(
+                "Both keys must come from that same connection. Save and open Onshape will ask you to sign in and allow access. Success brings you to Choose your slicer."
+            )
+            self.text(
+                "If Onshape rejects the client ID, reopen Slicer Link connection setup from Windows Start. On Linux, use the app launcher's Connection setup action."
             )
 
     def use_existing(self):
@@ -135,8 +209,25 @@ class SetupWizard:
     def advance(self):
         if self.step in (3, 4):
             value = self.client_secret.get() if self.step == 3 else self.client_id.get()
-            if not value.strip() or any(char.isspace() for char in value.strip()):
-                self.message.set("Paste the complete key from Onshape to continue.")
+            value = value.strip()
+            label = "OAuth secret key" if self.step == 3 else "OAuth client identifier key"
+            if not value:
+                self.message.set(f"The field is empty. Copy the {label} in Onshape, then click Paste here.")
+                return
+            if any(char.isspace() for char in value):
+                self.message.set(
+                    f"This includes spaces or line breaks. Copy only the {label} value, without its label, then click Paste."
+                )
+                return
+            if value.startswith(("http:", "https:", '"', "'")) or any(char in value for char in "*•…"):
+                self.message.set(
+                    f"This looks like an address, quoted text, or a hidden key. Copy the actual {label} value from Onshape."
+                )
+                return
+            if self.step == 4 and value == self.client_secret.get().strip():
+                self.message.set(
+                    "Both fields contain the same value. Client ID is the OAuth client identifier key in Keys and secret. The secret belongs on the previous screen."
+                )
                 return
         if self.step < 4:
             self.step += 1

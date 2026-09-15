@@ -2,7 +2,7 @@
 [Setup]
 AppId={{C1F99D8F-4F24-4D9D-9D3B-7DCC5E37E949}
 AppName=Onshape Slicer Link
-AppVersion=0.3.0
+AppVersion=0.3.1
 DefaultDirName={localappdata}\Programs\OnshapeSlicerLink
 DefaultGroupName=Onshape Slicer Link
 PrivilegesRequired=lowest
