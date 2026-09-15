@@ -47,29 +47,52 @@ from the desktop application's updater and must be explained in setup.
   local page made no REST API requests to obtain those selections. See
   [the embedding verification](embedded-verification.md) for the evidence and
   limits. These are source selections, not persisted slicer links.
-- WSL 2.7.3 is installed, but there is no usable distribution or Docker runtime.
-  Windows reports Virtual Machine Platform enabled, no active hypervisor, and
-  AMD firmware virtualization disabled. Importing a checksum-verified official
-  Alpine minirootfs as a disposable WSL2 startup probe failed with
-  `HCS_E_HYPERV_NOT_INSTALLED` and an explicit firmware virtualization error.
-  No system settings were changed. Firmware settings cannot be changed from
-  this development process.
-- Linux compatibility testing is deferred at Leo's request. This WSL startup
-  check was a prerequisite for the isolated runtime on Windows.
+- After Leo enabled SVM, WSL2 imported and started the dedicated Alpine
+  distribution. Docker runs inside that distribution without Docker Desktop.
+  Both dedicated stock desktops render inside the real Onshape application tab.
+- Native reload changed three objects across two plates in both applications.
+  Saved geometry, transforms, material, plate assignment and wall/infill settings
+  were compared. Reload recenters asymmetric geometry, shifting CAD landmarks.
+- A bounded project rewrite/reopen experiment retained the source-coordinate
+  frame and revision-bearing filenames in both native saves. It is not yet a
+  general project writer. It clears native Undo history when reopening.
+- Add to slicer now exports a real selected Onshape part, imports it through the
+  stock UI, saves a recovery copy and verifies the saved mesh and source revision.
+  The real Onshape UI test passed in both applications. Existing objects and
+  settings were unchanged in the checked Bambu project.
+- The local proxy has dedicated authentication for its backends, Host and Origin
+  checks, a same-origin request token, private automation-route exclusions and
+  WebSocket input suppression during imports. The existing local OAuth grant
+  stays on Windows. Opening the panel still makes no Onshape REST requests.
+- 51 Windows tests passed in 10.32 seconds, including the existing 35 bridge
+  checks. Native GUI evidence is separate from that suite.
+- Linux compatibility testing remains deferred at Leo's request. The WSL checks
+  above test the isolated runtime on Windows.
 
-Step 1 is partially verified. Steps 2 through 4 remain open. No claim about
-reliable native reload, preservation, two-click updates or slicer embedding is
-supported by this prototype yet.
+Step 1 is verified for this Windows development setup. Steps 2 and 3 are partial;
+step 4 remains open. The complete acceptance list is still the release gate.
+See [the current native verification](embedded-runtime-verification.md).
 
-## Next step
+## Next steps and decision
 
-Enable SVM Mode in the ASUS PRIME B550M-A WIFI II firmware and reboot Windows.
-ASUS documents the setting under Advanced > CPU Configuration > SVM Mode.
-Then verify WSL2 startup, create the dedicated desktop and test the stock
-slicers before expanding the UI or persistence model.
+The proposed normal workflow is one initial part selection and Add, followed by
+one Update linked parts click after CAD edits. The application must handle all
+files and native dialogs. Leo emphasized that it is only worth building if it
+requires less work than exporting/importing manually.
 
-Reference: [ASUS virtualization instructions](https://www.asus.com/ca-en/support/faq/1045141/).
+The candidate update is an automatic recovery save, project geometry update,
+reopen and native readback. Leo asked how many clicks this takes; the answer is
+one planned click, with no manual file handling. Clearing Undo history is the
+outstanding workflow tradeoff raised for review. The bounded experiment is
+reviewable, but the full update command has not been implemented or approved as
+a completed end-to-end workflow.
 
-If runtime startup is blocked by firmware virtualization, continue independent
-Onshape embedding and adapter work, then record the exact prerequisite for Leo.
-Do not replace the isolated session with automation of Leo's everyday desktop.
+Before promoting a project writer, test repeated asymmetric updates, renamed
+copies moved between plates, non-default configurations, unknown/missing links,
+painted or multi-volume objects, sliced data, interrupted saves, active plate
+retention and rollback. Compare actual native saves, not command delivery.
+Native window IDs and UUIDs regenerate and cannot be durable link identities.
+
+Complete the no-slicer/startup flow, installation, normal upstream update flow,
+source registry backup and recovery UI. The current scripts and test-account
+setup are development tools, not a finished installer or release.

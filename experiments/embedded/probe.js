@@ -48,7 +48,9 @@ window.addEventListener("message", event => {
     detail.textContent = `${part.studioName} · ${part.configuration || "Default configuration"} · CAD snapshot ${part.microversionId}`;
     row.append(detail); list.append(row);
   }
-  document.getElementById("selection-status").textContent = `${selected.size} source selections received from Onshape. Slicer import is not connected yet.`;
+  document.getElementById("selection-status").textContent = `${selected.size} parts selected. Choose your slicer, then Add to slicer.`;
+  document.getElementById("add").disabled = false;
+  document.querySelector("details").open = true;
   // Non-secret CAD selection evidence for the UI test; no browser credentials.
   window.slicerLinkSelectionEvidence = Array.from(selected.values());
 });
@@ -62,3 +64,48 @@ document.getElementById("choose").onclick = () => {
 if (valid && window.parent !== window) {
   window.parent.postMessage({messageName: "applicationInit", ...context}, source);
 }
+document.getElementById("open-desktop").onclick = () => {
+  const kind = document.getElementById("slicer").value;
+  const frame = document.getElementById("desktop");
+  frame.src = `/desktop/${kind}/`;
+  frame.hidden = false;
+  document.getElementById("desktop-status").textContent = "Dedicated local session. Updates are not connected yet.";
+};
+
+let pendingImport = null;
+document.getElementById("add").onclick = async () => {
+  if (!valid || !selected.size) return;
+  const kind = document.getElementById("slicer").value;
+  const controls = ["add", "choose", "slicer", "open-desktop"].map(id => document.getElementById(id));
+  controls.forEach(control => { control.disabled = true; });
+  const status = document.getElementById("desktop-status");
+  const frame = document.getElementById("desktop");
+  frame.style.pointerEvents = "none";
+  status.textContent = "Exporting the selected CAD snapshot and adding it to the slicer. Saving a recovery copy and checking the result…";
+  // A retry uses the same id, so a dropped HTTP reply cannot duplicate an import.
+  pendingImport ||= {kind, selections: Array.from(selected.values()), request_id: crypto.randomUUID().replaceAll("-", "")};
+  try {
+    const session = await (await fetch("/api/session")).json();
+    const response = await fetch(`/api/${pendingImport.kind}/add`, {method: "POST",
+      headers: {"Content-Type": "application/json", "X-OSL-Session": session.session},
+      body: JSON.stringify({selections: pendingImport.selections, request_id: pendingImport.request_id})});
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || "The import stopped.");
+    const receipts = document.getElementById("receipts"); receipts.replaceChildren();
+    for (const object of result.objects) {
+      const row = document.createElement("li");
+      row.textContent = `${object.name} · Plate ${object.plates.join(", ")} · Verified CAD snapshot ${object.revision} · ${object.configuration || "Default configuration"}`;
+      receipts.append(row);
+    }
+    status.textContent = `${result.objects.length} parts added and verified in ${kind === "orca" ? "OrcaSlicer" : "Bambu Studio"}. Updates are not connected yet.`;
+    window.slicerLinkImportEvidence = result;
+    selected.clear(); document.getElementById("parts").replaceChildren();
+    pendingImport = null;
+  } catch (error) {
+    status.textContent = error.message;
+  } finally {
+    controls.forEach(control => { control.disabled = false; });
+    document.getElementById("add").disabled = !selected.size;
+    frame.style.pointerEvents = "";
+  }
+};

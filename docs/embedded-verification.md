@@ -1,5 +1,8 @@
 # Local Onshape embedding verification
 
+This records the September 12 prototype. See [the September 14 runtime and CAD
+import results](embedded-runtime-verification.md) for the current implementation.
+
 Verified through the shared Windows browser on September 12, 2026, using the
 authorized free test account. This is an integration experiment, not a release.
 
