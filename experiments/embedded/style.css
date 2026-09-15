@@ -1,0 +1,29 @@
+:root { color-scheme: dark; font-family: system-ui, sans-serif; color: #e6edf4; background: #151c24; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { height: 100dvh; display: flex; flex-direction: column; }
+header { display: flex; align-items: center; gap: 14px; padding: 10px 16px; border-bottom: 1px solid #344150; }
+.mark { background: #91dcc0; color: #122820; font-weight: 700; padding: 8px; border-radius: 6px; }
+h1 { font-size: 18px; margin: 0; }
+#connection { margin-right: auto; font-size: 12px; color: #91dcc0; }
+label { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+select { font: inherit; padding: 8px; border: 1px solid #586779; border-radius: 5px; background: #1a2430; }
+button { border: 0; border-radius: 5px; background: #91dcc0; color: #122820; padding: 9px 14px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+button:disabled { opacity: .5; cursor: default; }
+button:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.sources { display: flex; align-items: start; gap: 16px; padding: 9px 16px; border-bottom: 1px solid #344150; }
+details { flex: 1; font-size: 13px; max-height: 40vh; overflow: auto; }
+summary { cursor: pointer; padding: 9px 0; color: #b7c4d1; }
+h2 { font-size: 15px; margin: 12px 0 8px; }
+p { line-height: 1.5; color: #b7c4d1; }
+dl { display: grid; grid-template-columns: 120px 1fr; gap: 6px; font-size: 12px; }
+dt { color: #91a3b7; } dd { margin: 0; overflow-wrap: anywhere; }
+#parts { list-style: none; padding: 0; }
+#parts li { padding: 10px; margin: 6px 0; background: #1a2430; border-radius: 5px; }
+#parts small { display: block; color: #aab8c7; margin-top: 6px; overflow-wrap: anywhere; }
+.desktop { flex: 1; min-height: 0; display: flex; flex-direction: column; background: #11161c; }
+#desktop-status { margin: 0; padding: 7px 16px; font-size: 12px; }
+#desktop { flex: 1; width: 100%; min-height: 0; border: 0; background: #181818; }
+#desktop[hidden] { display: none; }
+footer { padding: 5px 16px; font-size: 11px; color: #91a3b7; }
+@media(max-width: 760px) { header { flex-wrap: wrap; gap: 9px; } #connection { flex: 1; } .sources { flex-wrap: wrap; } }

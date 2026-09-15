@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Slicer Link</title>
+<link rel="stylesheet" href="/static/style.css">
+<main>
+  <header><span class="mark">SL</span><h1>Slicer Link</h1><span id="connection">Connecting…</span><label>Slicer <select id="slicer"><option value="orca">OrcaSlicer</option><option value="bambu">Bambu Studio</option></select></label><button id="open-desktop">Connect desktop</button></header>
+  <section class="sources"><button id="choose" disabled>Choose Onshape parts</button><button id="add" disabled>Add to slicer</button><details><summary>Document and source selections</summary><h2 id="heading">Checking Onshape connection</h2><p id="description">Waiting for document context.</p><dl id="context"></dl><p id="selection-status" role="status"></p><ul id="parts"></ul><ul id="receipts"></ul></details></section>
+  <section class="desktop"><p id="desktop-status" role="status">Development test. Uses your existing local Onshape connection. Updates are not connected yet.</p><iframe id="desktop" title="Isolated stock slicer" hidden></iframe></section>
+  <footer>Development preview · Local stock slicers · No CAD API polling</footer>
+</main>
+<script src="/static/probe.js"></script>
+</html>
