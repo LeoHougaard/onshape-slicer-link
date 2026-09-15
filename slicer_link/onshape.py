@@ -1,7 +1,6 @@
 """On-demand, snapshot-pinned exports. No timers, polling, or per-slicer state."""
 
 import json
-import math
 import ssl
 import threading
 from collections import defaultdict
@@ -157,7 +156,6 @@ class Client:
             f"/partid/{quote(source.part_id, safe='')}"
         )
         config = {"configuration": source.configuration}
-        bounds = self.request(path + "/boundingboxes?" + urlencode(config))
         expected = {
             "documentId": source.document_id,
             "elementId": source.element_id,
@@ -173,13 +171,10 @@ class Client:
             binary=True,
             expected=expected,
         )
-        metrics = validate_stl(data)
-        expected_bounds = [[bounds[end + axis] * 1000 for axis in "XYZ"] for end in ("low", "high")]
-        error = max(
-            abs(expected_bounds[j][i] - metrics["bounds_mm"][j][i]) for i in range(3) for j in range(2)
-        )
-        require(math.isfinite(error) and error <= 0.1, "Exported model dimensions differ from Onshape.")
-        return data, metrics
+        # CAD bounding boxes can be larger than the tessellated solid. Comparing
+        # their extrema rejects valid curved parts. Request millimetres at scale
+        # 1, enforce those values on redirects, and measure the actual mesh.
+        return data, validate_stl(data)
 
 
 class Exporter:

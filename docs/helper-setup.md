@@ -2,7 +2,7 @@
 
 ## Windows
 
-1. [Download the installer](https://github.com/LeoHougaard/onshape-slicer-link/releases/download/v0.3.2-test/OnshapeSlicerLink-Setup-0.3.2-x86_64.exe) and open it.
+1. [Download the installer](https://github.com/LeoHougaard/onshape-slicer-link/releases/download/v0.3.3-test/OnshapeSlicerLink-Setup-0.3.3-x86_64.exe) and open it.
 2. Open **Onshape Slicer Link** from Start.
 3. Follow the wizard. It opens Onshape and gives you copy buttons for the required fields.
 
@@ -16,7 +16,7 @@ their own Onshape account. You do not need Python, a server, or a terminal.
 
 Linux x86-64 is available for testing. It has not been tested on Linux or Arch.
 
-1. [Download the Linux archive](https://github.com/LeoHougaard/onshape-slicer-link/releases/download/v0.3.2-test/onshape-slicer-link-linux-x86_64.tar.gz) and extract it.
+1. [Download the Linux archive](https://github.com/LeoHougaard/onshape-slicer-link/releases/download/v0.3.3-test/onshape-slicer-link-linux-x86_64.tar.gz) and extract it.
 2. Open the extracted **OnshapeSlicerLink** folder in a terminal and run:
 
    ```sh

@@ -4,12 +4,12 @@ Send Onshape parts to your normal OrcaSlicer or Bambu Studio. Runs locally.
 
 ## Install
 
-**[Download for Windows](https://github.com/LeoHougaard/onshape-slicer-link/releases/download/v0.3.2-test/OnshapeSlicerLink-Setup-0.3.2-x86_64.exe)**
+**[Download for Windows](https://github.com/LeoHougaard/onshape-slicer-link/releases/download/v0.3.3-test/OnshapeSlicerLink-Setup-0.3.3-x86_64.exe)**
 
 Open the installer, then open **Onshape Slicer Link**. The setup wizard walks
 you through connecting Onshape, choosing your slicer, and sending your first part.
 
-**[Linux x86-64 download](https://github.com/LeoHougaard/onshape-slicer-link/releases/download/v0.3.2-test/onshape-slicer-link-linux-x86_64.tar.gz)** ? [Linux setup](docs/helper-setup.md#arch-linux-and-other-linux-desktops)
+**[Linux x86-64 download](https://github.com/LeoHougaard/onshape-slicer-link/releases/download/v0.3.3-test/onshape-slicer-link-linux-x86_64.tar.gz)** ? [Linux setup](docs/helper-setup.md#arch-linux-and-other-linux-desktops)
 
 ## Use
 

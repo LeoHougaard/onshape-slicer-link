@@ -1,5 +1,20 @@
 # Stock application verification
 
+Version 0.3.3 fixes a false export rejection, `Exported model dimensions differ
+from Onshape.` The reproduction uses the public drill-bit document linked from
+Onshape's [configuration guide](https://onshape-public.github.io/docs/api-adv/configs/),
+with configuration `List_izOjbm5HCRXEld=_500_mm`. Its valid STL measures
+12 x 12 x 500 mm. The CAD bounding box is approximately 12.275 x 12.464 x 500 mm,
+so the old 0.1 mm extrema comparison rejects it.
+
+Exports now measure the validated mesh directly. Requests and download redirects
+still require millimetres at scale 1 and the selected source snapshot and
+configuration. Removing the bounding-box request saves one API call per new
+export. The live configured export and 89 automated Windows checks passed,
+including the regression and rejection of changed units, scale, and source.
+This reproduction does not establish the exact cause of a laptop report whose
+document and error text were unavailable. Linux execution remains untested.
+
 Version 0.3.2 was exercised in a newly installed Windows VM with a new live
 Onshape connection. It fixes fresh-Windows certificate verification, packaged
 server startup, secret-sentence pasting, and setup starting partway through.
