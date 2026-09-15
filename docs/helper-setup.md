@@ -5,6 +5,10 @@ and sends parts to your installed OrcaSlicer or Bambu Studio. Your slicer stays
 unmodified. The version that puts the slicer inside Onshape is a separate
 preview and does not yet have a beginner installer.
 
+Using Arch or another Linux desktop? Start with the
+[Linux instructions below](#arch-linux-and-other-linux-desktops), then return
+to step 2 to connect Onshape.
+
 Already connected? Jump to [send your first part](#3-send-your-first-part),
 [update a part](#update-a-part), or [troubleshooting](#if-something-does-not-work).
 
@@ -223,20 +227,94 @@ Install future updates over the existing application and keep this data folder.
 Deleting it can break source links. Save your slicer projects and their adjacent
 model files when backing up; copying those files does not copy your Onshape login.
 
-## Linux users
+## Arch Linux and other Linux desktops
 
-Linux x86-64 is a target, but it has not been tested. This Windows test release
-does not include a Linux download or promise compatibility with every distribution.
+The release includes an experimental Linux x86-64 package. It was built on
+Ubuntu 22.04, but installation, sign-in, and slicer operation have not been
+tested on Linux, including Arch. Your friend can try it and report the result.
+It is the local app, not the embedded preview. No WSL or Docker is needed.
 
-If a maintainer gives you `onshape-slicer-link-linux-x86_64.tar.gz`, extract it,
-open the extracted `OnshapeSlicerLink` folder in a terminal, and run
-`bash install.sh`. You need a graphical desktop with an unlocked Secret Service
-or KWallet password store. The script installs under your user account and opens
-the app. Follow the same Onshape and slicer steps above.
+### Prepare your desktop
 
-The script does not create an application-menu shortcut. Reopen it by running
-`~/.local/share/onshape-slicer-link/OnshapeSlicerLink`, or the corresponding path
-under a custom `XDG_DATA_HOME`. Linux data uses
-`~/.config/onshape-slicer-link/local`, unless `XDG_CONFIG_HOME` is set. AppImages
-must be executable before selecting them with **Browse...**. Installed Flatpaks
-are detected, but this path also remains untested.
+Open your normal OrcaSlicer or Bambu Studio and finish its setup first. Keep
+using the official slicer; Slicer Link does not replace it.
+
+Slicer Link also needs a desktop password store to save the Onshape connection.
+GNOME Keyring provides one through Secret Service. A configured KWallet may
+also work; compatibility with this package has not been verified.
+
+On Arch, if you do not already have a working password store, install GNOME
+Keyring and its password manager through your package manager:
+
+```sh
+sudo pacman -Syu --needed gnome-keyring seahorse
+```
+
+This command updates your Arch system as well as installing those packages.
+Review the package manager's confirmation before proceeding. Open **Passwords
+and Keys**, also called **Seahorse**, and create or unlock a password keyring.
+Use a password for the keyring. See the
+[ArchWiki keyring guide](https://wiki.archlinux.org/title/GNOME/Keyring) for
+desktop-specific startup help. Minimal window-manager sessions may need extra
+configuration; installing the packages alone does not establish that the
+password store is running and unlocked.
+
+If your slicer is an AppImage, allow it to run as a program in its file
+properties. If it reports a FUSE error on Arch, install `fuse2` through your
+package manager. See the official
+[AppImage FUSE instructions](https://docs.appimage.org/user-guide/troubleshooting/fuse.html#setting-up-fuse-on-arch-linux).
+Slicer Link itself is not an AppImage and does not require FUSE.
+
+### Install Slicer Link
+
+1. Open the [test release](https://github.com/LeoHougaard/onshape-slicer-link/releases/tag/local-bridge-v0.2.0-friends).
+   Under **Assets**, download **onshape-slicer-link-linux-x86_64.tar.gz**.
+2. Extract the archive with your file manager. Open the extracted
+   **OnshapeSlicerLink** folder in a terminal.
+3. Run this command as your normal user, without `sudo`:
+
+   ```sh
+   bash install.sh
+   ```
+
+4. Keep the terminal open while using the app. Its first connection window
+   should appear. Follow [step 2 above](#2-connect-your-own-onshape-account)
+   to connect your own Onshape account, then send a part.
+
+If you prefer to extract from the terminal and downloaded into `Downloads`,
+these commands perform steps 2 and 3:
+
+```sh
+cd ~/Downloads
+tar -xzf onshape-slicer-link-linux-x86_64.tar.gz
+cd OnshapeSlicerLink
+bash install.sh
+```
+
+The installer copies the app into your user folder. It does not create an
+application-menu shortcut. To reopen Slicer Link, run:
+
+```sh
+~/.local/share/onshape-slicer-link/OnshapeSlicerLink
+```
+
+If you set `XDG_DATA_HOME`, use its `onshape-slicer-link/OnshapeSlicerLink` path
+instead. In **Can't find your slicer?**, use **Browse...** to select the
+executable or AppImage, then **Use this slicer**. Installed Flatpaks are also
+detected by the app, but that path remains untested.
+
+### If it does not open on Arch
+
+- A password-store error means the store is missing, unavailable, or locked.
+  Open Seahorse and unlock your keyring, then retry in the same desktop session.
+- A display error means the app cannot reach a graphical desktop. Launch it
+  from a terminal inside your normal desktop session, as your normal user.
+- For a missing library or other startup error, copy the terminal message into
+  a [GitHub issue](https://github.com/LeoHougaard/onshape-slicer-link/issues).
+  Include your desktop environment, whether you use X11 or Wayland, and which
+  slicer you chose. Do not include credentials or private CAD files.
+
+Linux data lives in `~/.config/onshape-slicer-link/local`, unless
+`XDG_CONFIG_HOME` is set. Stop the app with **Stop local app** before closing
+its terminal. The [first-test checklist](https://github.com/LeoHougaard/onshape-slicer-link/blob/main/docs/user-test.md)
+can guide your friend's report. A successful package build is not a Linux test.
