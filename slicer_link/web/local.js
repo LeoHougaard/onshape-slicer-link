@@ -54,7 +54,7 @@ async function state() {
   if (local.slicers.some(s => s.id === choice)) $("slicer").value = choice;
   documentContext = local.context;
   setupFinished = local.setup_complete;
-  if (wizardStep === null) wizardStep = !$("slicer").value ? 1 : local.context.document_id ? 3 : 2;
+  if (wizardStep === null) wizardStep = 1;
   $("project-name").textContent = local.project.path || "No saved project connected yet.";
   if (!$("studio-url").value && local.context.document_id) {
     const c = local.context;

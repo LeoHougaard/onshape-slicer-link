@@ -199,6 +199,14 @@ def test_local_browser_one_click_send_and_update(local, tmp_path):
             page.get_by_role("button", name="Connect document").click()
             page.get_by_text("Step 3 of 3", exact=True).wait_for()
             page.get_by_role("button", name="Link part", exact=True).click()
+            # An unfinished setup reopens at the beginning while retaining its choices.
+            page.reload()
+            page.get_by_text("Step 1 of 3", exact=True).wait_for()
+            assert page.get_by_label("Send parts to").input_value() == ORCA
+            page.get_by_role("button", name="Next", exact=True).click()
+            assert "/documents/" in page.get_by_label("Onshape document link").input_value()
+            page.get_by_role("button", name="Connect document").click()
+            page.get_by_text("Step 3 of 3", exact=True).wait_for()
             page.get_by_role("button", name="Send / Update", exact=True).click()
             playwright.expect(page.locator("#status")).to_contain_text("Sent 1 part to OrcaSlicer")
             assert len(launches) == 1 and launches[0][1][0].read_bytes() == DATA
