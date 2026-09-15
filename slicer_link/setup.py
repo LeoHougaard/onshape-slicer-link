@@ -7,6 +7,7 @@ from tkinter import messagebox, ttk
 
 from cryptography.fernet import Fernet
 
+from . import __version__
 from .model import LinkError
 
 SETTINGS_URL = "https://cad.onshape.com/user/settings"
@@ -19,7 +20,8 @@ class SetupWizard:
         self.root, self.save, self.open_url = root, save, open_url
         self.existing = existing or {}
         self.result = None
-        self.step = 3 if self.existing.get("client_id") else 0
+        self.step = 0
+        self.reusing = bool(self.existing.get("client_id"))
         self.identifier = "com.onshapeslicerlink.local." + secrets.token_hex(6)
         self.client_id = tk.StringVar(root, self.existing.get("client_id", ""))
         self.client_secret = tk.StringVar(root, self.existing.get("client_secret", ""))
@@ -122,7 +124,8 @@ class SetupWizard:
         for child in self.content.winfo_children():
             child.destroy()
         self.message.set("")
-        self.progress.config(text=f"Connect Onshape · Step {self.step + 1} of 5")
+        step, total = (self.step - 1, 3) if self.reusing and self.step >= 3 else (self.step + 1, 5)
+        self.progress.config(text=f"Connect Onshape · Step {step} of {total} · Version {__version__}")
         self.back.config(state="disabled" if self.step == 0 else "normal")
         titles = (
             "Open your Onshape settings",
@@ -146,9 +149,9 @@ class SetupWizard:
             self.text(
                 "Use OAuth applications, not the separate API keys tab. This wizard needs an OAuth client ID and secret."
             )
-            ttk.Button(self.content, text="I already have client details", command=self.use_existing).pack(
-                anchor="w"
-            )
+            ttk.Button(
+                self.content, text="Use an existing Onshape connection", command=self.use_existing
+            ).pack(anchor="w")
         elif self.step == 1:
             self.text(
                 "For each field: click Copy here, click the matching box in Onshape, and press Ctrl+V to paste."
@@ -168,9 +171,16 @@ class SetupWizard:
                 "Click Create application in Onshape. Keep the popup with the secret key open, then click Next here."
             )
         elif self.step == 3:
+            if self.reusing:
+                self.text(
+                    "In Onshape, open My account > Developer > OAuth applications. "
+                    "Open the connection you want to use, then select Keys and secret."
+                )
             self.text(
                 "Your saved secret is filled in. Keep it, or click Paste to replace it with the OAuth secret from Onshape."
-                if self.existing.get("client_id")
+                if self.reusing and self.existing.get("client_id")
+                else "Paste the secret you copied when creating this connection. If you lost it, use the help below."
+                if self.reusing
                 else "In Onshape's popup, copy the value labelled OAuth secret key. Return here and click Paste below."
             )
             self.input("OAuth secret key / Client secret", self.client_secret, masked=True)
@@ -182,7 +192,11 @@ class SetupWizard:
                 self.content, text="I closed the popup or can't find the secret", command=self.secret_help
             ).pack(anchor="w")
         else:
-            self.text("1. Close the secret popup in Onshape after copying its value on the previous screen.")
+            self.text(
+                "1. Return to your connection in Onshape. Close the secret popup if it is still open."
+                if self.reusing
+                else "1. Close the secret popup in Onshape after copying its value on the previous screen."
+            )
             self.text(
                 "2. Open your connection: My account > Developer > OAuth applications > My Slicer Link, or the name you chose."
             )
@@ -198,15 +212,24 @@ class SetupWizard:
             )
 
     def use_existing(self):
+        if not self.reusing and self.existing.get("client_id"):
+            self.client_id.set(self.existing.get("client_id", ""))
+            self.client_secret.set(self.existing.get("client_secret", ""))
+        self.reusing = True
         self.step = 3
         self.render()
 
     def previous(self):
         if self.step:
-            self.step -= 1
+            self.step = 0 if self.reusing and self.step == 3 else self.step - 1
             self.render()
 
     def advance(self):
+        if self.step == 0 and self.reusing:
+            # Starting a new registration must not pair its ID with a saved secret.
+            self.reusing = False
+            self.client_id.set("")
+            self.client_secret.set("")
         if self.step in (3, 4):
             value = self.client_secret.get() if self.step == 3 else self.client_id.get()
             value = value.strip()

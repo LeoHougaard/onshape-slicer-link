@@ -2,14 +2,15 @@
 [Setup]
 AppId={{C1F99D8F-4F24-4D9D-9D3B-7DCC5E37E949}
 AppName=Onshape Slicer Link
-AppVersion=0.3.1
+AppVersion=0.3.2
+AppVerName=Onshape Slicer Link 0.3.2
 DefaultDirName={localappdata}\Programs\OnshapeSlicerLink
 DefaultGroupName=Onshape Slicer Link
 PrivilegesRequired=lowest
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 OutputDir=..\dist
-OutputBaseFilename=OnshapeSlicerLink-Setup-x86_64
+OutputBaseFilename=OnshapeSlicerLink-Setup-0.3.2-x86_64
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern

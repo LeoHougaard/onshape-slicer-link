@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "onshape-slicer-link"
-version = "0.3.1"
+version = "0.3.2"
 description = "Local Onshape connection for unmodified OrcaSlicer and Bambu Studio"
 requires-python = ">=3.11"
 license = "AGPL-3.0-only"

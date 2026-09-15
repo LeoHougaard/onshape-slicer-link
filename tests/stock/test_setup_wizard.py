@@ -85,6 +85,8 @@ def test_wizard_validates_then_retries_locked_store_without_losing_existing_key(
 def test_paste_replaces_saved_secret_and_next_button_advances(root):
     writes = []
     wizard = SetupWizard(root, writes.append, existing={"client_id": "old-id", "client_secret": "old-secret"})
+    assert wizard.step == 0
+    wizard.use_existing()
     root.clipboard_clear()
     root.clipboard_append(" \r\ntest-new-secret\r\n ")
     row = next(child for child in wizard.content.winfo_children() if child.winfo_class() == "TFrame")
@@ -94,6 +96,20 @@ def test_paste_replaces_saved_secret_and_next_button_advances(root):
     assert wizard.step == 4 and not writes
     wizard.previous()
     assert wizard.client_secret.get() == "test-new-secret"
+
+
+def test_saved_details_never_skip_the_start_and_new_registration_clears_them(root):
+    old = {"client_id": "old-id", "client_secret": "old-secret", "key": "keep-encryption"}
+    wizard = SetupWizard(root, lambda _: None, existing=old)
+    assert wizard.step == 0
+    wizard.use_existing()
+    assert wizard.step == 3 and "Step 2 of 3" in wizard.progress.cget("text")
+    wizard.previous()
+    assert wizard.step == 0
+    wizard.next.invoke()
+    assert wizard.step == 1
+    assert not wizard.client_id.get() and not wizard.client_secret.get()
+    assert wizard.existing == old
 
 
 @pytest.mark.parametrize(
