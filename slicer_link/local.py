@@ -108,7 +108,9 @@ def run(*, reconfigure=False):
         control_token=config["control"],
         connected=connected,
     )
-    server = uvicorn.Server(uvicorn.Config(app, log_config=None, access_log=False, proxy_headers=False))
+    server = uvicorn.Server(
+        uvicorn.Config(app, log_config=None, access_log=False, proxy_headers=False, ws="none")
+    )
 
     def startup():
         for _ in range(200):
