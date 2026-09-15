@@ -12,8 +12,21 @@ still require millimetres at scale 1 and the selected source snapshot and
 configuration. Removing the bounding-box request saves one API call per new
 export. The live configured export and 89 automated Windows checks passed,
 including the regression and rejection of changed units, scale, and source.
-This reproduction does not establish the exact cause of a laptop report whose
-document and error text were unavailable. Linux execution remains untested.
+The installed 0.3.2 application reproduced the same error in the Windows VM.
+After upgrading to the exact 0.3.3 CI installer, Send returned success and
+launched stock OrcaSlicer with the part. The saved connection and links remained.
+On the host, a separate stock Orca profile displayed the correct dimensions;
+its saved 3MF also contained a 12 x 12 x 500 mm mesh. The tall test part exceeds
+the selected printer's build height; no slicing or printing was attempted.
+Linux execution remains untested.
+
+Packages came from commit `d09a9f7c32f438415c1031004bf67ac0a8d18362`,
+[build 35034537169](https://github.com/LeoHougaard/onshape-slicer-link/actions/runs/35034537169).
+The installed executable matched the CI package. Both public downloads were
+checked anonymously against the release's SHA-256 sums. To upgrade a running
+local service, first use **Connection & API use > Stop local app**. In this VM,
+the installer could not stop the old service automatically; stopping it through
+the app and choosing Try again completed the installation.
 
 Version 0.3.2 was exercised in a newly installed Windows VM with a new live
 Onshape connection. It fixes fresh-Windows certificate verification, packaged
