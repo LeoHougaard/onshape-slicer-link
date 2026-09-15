@@ -1,5 +1,10 @@
 # Stock application verification
 
+Version 0.3.2 was exercised in a newly installed Windows VM with a new live
+Onshape connection. It fixes fresh-Windows certificate verification, packaged
+server startup, secret-sentence pasting, and setup starting partway through.
+See the [clean installation test record](clean-install-verification.md).
+
 Version 0.3.1 explains rejected key input, adds replacement Paste buttons and
 secret recovery help, and keeps navigation visible at 100% and 150% scaling.
 All 66 Windows tests passed. Real mouse clicks on Paste and Next reached the
