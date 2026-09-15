@@ -32,7 +32,7 @@ uv run --extra dev python scripts/build_helper.py
 ```
 
 On Windows, compile `packaging/windows.iss` with Inno Setup 6. The result is
-`dist/OnshapeSlicerLink-Setup-x86_64.exe`. The build also produces
+`dist/OnshapeSlicerLink-Setup-0.3.2-x86_64.exe`. The build also produces
 `dist/onshape-slicer-link-windows-x86_64.zip` with the executable and its runtime.
 
 Linux builds produce `dist/onshape-slicer-link-linux-x86_64.tar.gz`, containing

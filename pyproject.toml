@@ -8,7 +8,7 @@ version = "0.3.2"
 description = "Local Onshape connection for unmodified OrcaSlicer and Bambu Studio"
 requires-python = ">=3.11"
 license = "AGPL-3.0-only"
-dependencies = ["cryptography>=44,<47", "keyring>=25,<26", "fastapi>=0.115,<1", "uvicorn>=0.34,<1"]
+dependencies = ["cryptography>=44,<47", "keyring>=25,<26", "fastapi>=0.115,<1", "uvicorn>=0.34,<1", "truststore>=0.10,<1"]
 
 [project.optional-dependencies]
 server = [] # Retained for existing development commands; the local app includes the service.

@@ -257,7 +257,7 @@ step "Choose Connect to Onshape and authorize the test account. Allow the sign-i
 pause "Press Enter after Slicer Link shows your connected account."
 
 stage "Connect the desktop helper"
-say "Install dist/OnshapeSlicerLink-Setup-x86_64.exe on Windows."
+say "Install the Windows setup executable from dist."
 say "The first development build asks for the public application address:"
 say "$OSL_ORIGIN"
 step "Choose a project folder and Connect with Onshape, then Pair this computer in the browser."

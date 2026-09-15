@@ -2,12 +2,15 @@
 
 import json
 import math
+import ssl
 import threading
 from collections import defaultdict
 from dataclasses import replace
 from urllib.error import HTTPError, URLError
 from urllib.parse import parse_qs, quote, urlencode, urljoin, urlsplit
-from urllib.request import HTTPRedirectHandler, Request, build_opener
+from urllib.request import HTTPRedirectHandler, HTTPSHandler, Request, build_opener
+
+import truststore
 
 from .files import atomic_write
 from .model import MAX_MESH_BYTES, LinkError, Source, canonical, digest, object_id, require, validate_stl
@@ -20,10 +23,16 @@ class NoRedirect(HTTPRedirectHandler):
         return None
 
 
+def secure_opener():
+    # Native verification can retrieve missing issuers on a fresh Windows install.
+    context = truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    return build_opener(NoRedirect, HTTPSHandler(context=context))
+
+
 class Client:
     def __init__(self, token, record=lambda status: None, opener=None):
         self.token, self.record = token, record
-        self.opener = opener or build_opener(NoRedirect)
+        self.opener = opener or secure_opener()
 
     def request(self, path, body=None, *, binary=False, expected=None):
         require(path.startswith("/api/"), "Invalid Onshape endpoint.")

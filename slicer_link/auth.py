@@ -4,19 +4,24 @@ import json
 import secrets
 import threading
 import time
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
-from urllib.request import Request, build_opener
+from urllib.request import Request
 
 from .model import LinkError, digest, require
-from .onshape import Client, NoRedirect
+from .onshape import Client, secure_opener
 
 AUTH_URL = "https://oauth.onshape.com/oauth/authorize"
 TOKEN_URL = "https://oauth.onshape.com/oauth/token"
 
 
+class ConnectionFailure(LinkError):
+    """A fixed, credential-free explanation suitable for the connection screen."""
+
+
 def token_request(fields):
     try:
-        with build_opener(NoRedirect).open(
+        with secure_opener().open(
             Request(
                 TOKEN_URL,
                 data=urlencode(fields).encode(),
@@ -27,8 +32,18 @@ def token_request(fields):
             data = response.read(64 * 1024 + 1)
             require(len(data) <= 64 * 1024, "Invalid authorization response.")
             return json.loads(data)
+    except HTTPError as error:
+        status = error.code
+        error.close()
+        raise ConnectionFailure(
+            f"Onshape rejected authorization (HTTP {status}). Check the client ID and secret."
+        ) from None
+    except URLError:
+        raise ConnectionFailure(
+            "Could not securely reach Onshape. Check your internet connection and computer's date and time."
+        ) from None
     except (OSError, ValueError):
-        raise LinkError("Onshape authorization failed. Try connecting again.") from None
+        raise ConnectionFailure("Onshape authorization failed. Try connecting again.") from None
 
 
 class Auth:
@@ -75,10 +90,8 @@ class Auth:
 
     def complete(self, state, code):
         pending = self.store.consume("oauth", digest(state.encode()))
-        require(
-            pending and isinstance(code, str) and 0 < len(code) <= 4096,
-            "Sign-in expired or was already used. Connect again.",
-        )
+        if not (pending and isinstance(code, str) and 0 < len(code) <= 4096):
+            raise ConnectionFailure("Sign-in expired or was already used. Connect again.")
         tokens = self._tokens(
             self.transport(
                 {

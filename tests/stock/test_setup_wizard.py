@@ -112,6 +112,26 @@ def test_saved_details_never_skip_the_start_and_new_registration_clears_them(roo
     assert wizard.existing == old
 
 
+@pytest.mark.parametrize("paste_button", [True, False])
+def test_onshape_secret_popup_sentence_advances_without_manual_cleanup(root, paste_button):
+    wizard = SetupWizard(root, lambda _: pytest.fail("Secret step must not save yet"))
+    wizard.use_existing()
+    popup = (
+        "OAuth secret for My Slicer Link\nThe application's secret is test-secret+/= "
+        "Please transfer this securely to the external application now as you will not be "
+        "able to display this string again.\nClose"
+    )
+    if paste_button:
+        root.clipboard_clear()
+        root.clipboard_append(popup)
+        wizard.paste(wizard.client_secret)
+    else:
+        wizard.client_secret.set(popup)
+    wizard.next.invoke()
+    assert wizard.step == 4
+    assert wizard.client_secret.get() == "test-secret+/="
+
+
 @pytest.mark.parametrize(
     "value, message",
     [

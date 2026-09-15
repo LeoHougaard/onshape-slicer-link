@@ -1,4 +1,5 @@
 import json
+from urllib.error import HTTPError, URLError
 from urllib.parse import parse_qs, urlsplit
 
 import pytest
@@ -8,6 +9,25 @@ from slicer_link import auth as module
 from slicer_link.auth import Auth
 from slicer_link.model import LinkError, digest
 from slicer_link.store import Store
+
+
+@pytest.mark.parametrize(
+    "error, expected",
+    [
+        (HTTPError("https://example.invalid/private-code", 401, "private-reason", {}, None), "HTTP 401"),
+        (URLError("private-network-details"), "securely reach Onshape"),
+    ],
+)
+def test_token_errors_explain_failure_without_echoing_credentials(monkeypatch, error, expected):
+    class FailingOpener:
+        def open(self, *args, **kwargs):
+            raise error
+
+    monkeypatch.setattr(module, "secure_opener", lambda: FailingOpener())
+    with pytest.raises(module.ConnectionFailure) as failure:
+        module.token_request({"client_secret": "private-secret"})
+    assert expected in str(failure.value)
+    assert "private-" not in str(failure.value)
 
 
 def test_oauth_codes_are_one_use_nonce_bound_and_tokens_remain_server_side(tmp_path, monkeypatch):

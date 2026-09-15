@@ -496,6 +496,7 @@ dependencies = [
     { name = "cryptography" },
     { name = "fastapi" },
     { name = "keyring" },
+    { name = "truststore" },
     { name = "uvicorn" },
 ]
 
@@ -533,6 +534,7 @@ requires-dist = [
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8,<10" },
     { name = "pywinauto", marker = "sys_platform == 'win32' and extra == 'desktop-test'", specifier = ">=0.6.9,<1" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.11,<1" },
+    { name = "truststore", specifier = ">=0.10,<1" },
     { name = "uvicorn", specifier = ">=0.34,<1" },
     { name = "websockets", marker = "extra == 'embedded-dev'", specifier = ">=15,<17" },
 ]
@@ -984,6 +986,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/b5/b4/205b0d5241d934e8add0c38aa924c4f9fb7330834ff11e5444db964ec3f9/starlette-1.6.0.tar.gz", hash = "sha256:d4e3ac5e546444960c710297a3c9fc3f7ebae1b7e963f3d36173b49da535be9b", size = 2716969, upload-time = "2026-08-08T18:27:57.512Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c8/cb/6a6a47d5b464bd08695d254f3da6e7986cc70c9fa5d778eda57538edfe56/starlette-1.6.0-py3-none-any.whl", hash = "sha256:a86dd39d14bb45f85a3d18525215a9ef0cfd1f192ac793220e72598c90335f0c", size = 75969, upload-time = "2026-08-08T18:27:56.196Z" },
+]
+
+[[package]]
+name = "truststore"
+version = "0.10.4"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/53/a3/1585216310e344e8102c22482f6060c7a6ea0322b63e026372e6dcefcfd6/truststore-0.10.4.tar.gz", hash = "sha256:9d91bd436463ad5e4ee4aba766628dd6cd7010cf3e2461756b3303710eebc301", size = 26169, upload-time = "2025-08-12T18:49:02.73Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/19/97/56608b2249fe206a67cd573bc93cd9896e1efb9e98bce9c163bcdc704b88/truststore-0.10.4-py3-none-any.whl", hash = "sha256:adaeaecf1cbb5f4de3b1959b42d41f6fab57b2b1666adb59e89cb0b53361d981", size = 18660, upload-time = "2025-08-12T18:49:01.46Z" },
 ]
 
 [[package]]

@@ -1,14 +1,16 @@
 """Browser interface for a service on this computer. Nothing listens on the LAN."""
 
 import secrets
+from html import escape
 from urllib.parse import urlencode, urlsplit
 
 from fastapi import HTTPException, Request
-from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from pydantic import Field
 from starlette.routing import Route
 
 from . import platforms
+from .auth import ConnectionFailure
 from .documents import resolve
 from .model import LinkError, digest, require
 from .service import WEB, Body, create_app
@@ -84,8 +86,14 @@ def create_local_app(
         try:
             require(len(values.get("state", "")) <= 256, "Invalid sign-in state.")
             code, nonce = auth.complete(values.get("state", ""), values.get("code", ""))
-        except LinkError:
-            return FileResponse(WEB / "connection-help.html", status_code=400)
+        except LinkError as error:
+            page = (WEB / "connection-help.html").read_text("utf-8")
+            explanation = (
+                str(error)
+                if isinstance(error, ConnectionFailure)
+                else "Onshape could not complete the connection."
+            )
+            return HTMLResponse(page.replace("<!-- failure -->", escape(explanation)), status_code=400)
         pending = store.get("login", digest(code.encode()))
         connected(pending["owner"])
         return RedirectResponse(settings.origin + "/#" + urlencode({"local-code": code, "nonce": nonce}))

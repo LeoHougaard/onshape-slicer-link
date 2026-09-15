@@ -1,5 +1,6 @@
 """Small native wizard. Credentials are saved only after the final step."""
 
+import re
 import secrets
 import tkinter as tk
 import webbrowser
@@ -13,6 +14,15 @@ from .model import LinkError
 SETTINGS_URL = "https://cad.onshape.com/user/settings"
 REDIRECT = "http://localhost:8767/auth/callback"
 HELP_URL = "https://cad.onshape.com/help/Content/Plans/my_account_developer.htm"
+
+
+def secret_value(value):
+    """Accept Onshape's secret sentence as well as the selected key itself."""
+    match = re.search(
+        r"The application's secret is\s+([A-Za-z0-9_+/=-]+)\s+Please transfer this securely",
+        value,
+    )
+    return match.group(1) if match else value.strip()
 
 
 class SetupWizard:
@@ -104,7 +114,7 @@ class SetupWizard:
         if not value:
             self.message.set("Nothing to paste. Copy the key in Onshape first, then click Paste here.")
             return
-        variable.set(value)
+        variable.set(secret_value(value) if self.step == 3 else value)
         self.message.set("Pasted. Click Next to continue." if self.step == 3 else "Pasted. Ready to sign in.")
 
     def secret_help(self):
@@ -181,11 +191,11 @@ class SetupWizard:
                 if self.reusing and self.existing.get("client_id")
                 else "Paste the secret you copied when creating this connection. If you lost it, use the help below."
                 if self.reusing
-                else "In Onshape's popup, copy the value labelled OAuth secret key. Return here and click Paste below."
+                else "In the popup titled OAuth secret for My Slicer Link, select the text after \"The application's secret is\" and press Ctrl+C. Return here and click Paste."
             )
             self.input("OAuth secret key / Client secret", self.client_secret, masked=True)
             self.text(
-                "Onshape shows this secret only once. Copy the value itself, without its label. The other key, the client ID, goes on the next screen."
+                "Onshape shows this secret only once. You can also copy the whole sentence; Paste will pick out the key. Keep the popup open until you click Next here."
             )
             self.text("An API key or your Onshape password will not work here.")
             ttk.Button(
@@ -232,7 +242,9 @@ class SetupWizard:
             self.client_secret.set("")
         if self.step in (3, 4):
             value = self.client_secret.get() if self.step == 3 else self.client_id.get()
-            value = value.strip()
+            value = secret_value(value) if self.step == 3 else value.strip()
+            if self.step == 3:
+                self.client_secret.set(value)
             label = "OAuth secret key" if self.step == 3 else "OAuth client identifier key"
             if not value:
                 self.message.set(f"The field is empty. Copy the {label} in Onshape, then click Paste here.")
