@@ -1,5 +1,8 @@
 # Local slicer connection
 
+This page describes the installable local app. The separate
+[embedded preview](embedded-setup.md) is still in development.
+
 One local process serves the browser UI, talks to Onshape, manages source files,
 and opens the selected stock slicer. It binds only to 127.0.0.1. There is no hosted
 service, public tunnel, paired helper, or paid infrastructure in the supported path.
@@ -85,9 +88,9 @@ launch occurs. A later explicit send can complete the mirror safely.
 
 ## Current limits
 
-The app uses a separate local browser window. Embedding in Onshape's HTTPS iframe
-is still outstanding. Stock slicers do not expose a verified remote replacement
-interface for unsaved objects, so native reload remains a user action.
+The installed app uses a separate local browser window. The development preview
+has embedded stock desktops inside Onshape, but that environment is not part of
+this installer. Native reload remains a user action in the local app.
 
 Windows packaging and execution are verified. Linux source and packaging are
 provided but Linux execution is explicitly untested. Flatpak launches request
